@@ -7,7 +7,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
     <link rel="stylesheet" href="../lib/app.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../tailwind.js"></script>
 </head>
 
 <body>
@@ -30,12 +30,12 @@
 
                         <div>
                             <label for="user_name" class="text-gray-700 ml-2 text-sm">Porfavor introduzca un usuario<span class="text-red-400">*</span></label>
-                            <input type="text" name="user_name" id="user_name" class="mt-1 block w-full border-none bg-gray-100 h-11 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
+                            <input type="text" name="user_name" id="user_name" class="pl-4 focus mt-1 block w-full border-none bg-gray-100 h-11 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
                         </div>
 
                         <div class="mt-7">
                             <label for="passw" class="text-gray-700 ml-2 text-sm">Contraseña<span class="text-red-400">*</span></label>
-                            <input type="password" name="passw" id="passw" class="mt-1 block w-full border-none bg-gray-100 h-11 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
+                            <input type="password" name="passw" id="passw" class="pl-4 mt-1 block w-full border-none bg-gray-100 h-11 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
                         </div>
 
                         <div class="mt-7">
