@@ -1,8 +1,9 @@
 <?php
+session_start();
 $user = $_SESSION["user"];
 include('../conexion.php');
 
-$user_query = "SELECT * FROM USUARI WHERE USUARI.nomUsuari = 'tuti'";
+$user_query = "SELECT * FROM USUARI WHERE USUARI.nomUsuari = '$user'";
 
 $result = consultar("localhost", "root", "", $user_query);
 
@@ -26,7 +27,7 @@ $user_data = ['usuari' => $reg['nomUsuari'], 'descripcio' => $reg['descripcio'],
 
 <body>
     <header>
-        <?php include('../header.php'); ?>
+        <?php include('header.php'); ?>
     </header>
     <main>
         <!-- component -->

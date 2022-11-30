@@ -1,8 +1,9 @@
  <?php
+    session_start();
     $user = $_SESSION["user"];
     include('../conexion.php');
 
-    $user_query = "SELECT * FROM USUARI WHERE USUARI.nomUsuari = 'tuti'";
+    $user_query = "SELECT * FROM USUARI WHERE USUARI.nomUsuari = '$user'";
 
     $result = consultar("localhost", "root", "", $user_query);
 
@@ -44,15 +45,18 @@
                                  <span class="text-xl font-bold block uppercase tracking-wide text-slate-700">3,360</span>
                                  <span class="text-sm text-slate-400">Publicaciones</span>
                              </div>
-                             <div class="p-3 text-center">
-                                 <span class="text-xl font-bold block uppercase tracking-wide text-slate-700">2,454</span>
-                                 <span class="text-sm text-slate-400">Followers</span>
-                             </div>
-
-                             <div class="p-3 text-center">
-                                 <span class="text-xl font-bold block uppercase tracking-wide text-slate-700">564</span>
-                                 <span class="text-sm text-slate-400">Following</span>
-                             </div>
+                             <a href="followers.php">
+                                <div class="p-3 text-center">
+                                    <span class="text-xl font-bold block uppercase tracking-wide text-slate-700">2,454</span>
+                                    <span class="text-sm text-slate-400">Followers</span>
+                                </div>
+                            </a>
+                            <a href="following.php">
+                                <div class="p-3 text-center">
+                                    <span class="text-xl font-bold block uppercase tracking-wide text-slate-700">564</span>
+                                    <span class="text-sm text-slate-400">Following</span>
+                                </div>
+                            </a>
                          </div>
                      </div>
                  </div>
@@ -99,7 +103,7 @@
                  <div class="grid items-center justify-center mt-16" id="publications">
                      <?php
                         $publi_query = "SELECT idPublicacio, titlePub, textPub, USUARI.nomUsuari, dataPub FROM PUBLICACIO 
-                        JOIN USUARI ON PUBLICACIO.nomUsuari = 'tuti' and USUARI.nomUsuari = PUBLICACIO.nomUsuari ORDER BY dataPub DESC";
+                        JOIN USUARI ON PUBLICACIO.nomUsuari = '$user' and USUARI.nomUsuari = PUBLICACIO.nomUsuari ORDER BY dataPub DESC";
                         $result_publi = consultar("localhost", "root", "", $publi_query);
                         while ($fila = mysqli_fetch_array($result_publi)) : ?>
 
@@ -197,7 +201,7 @@
                                     bg-red-500">
                              <div class="relative flex items-center justify-center">
 
-                                 <a href="">
+                                 <a href="logout.php">
                                      <span class="block font-semibold tracking-wide text-white text-sm transition duration-300 sm:text-base">Cerrar Sesión</span>
                                  </a>
                              </div>

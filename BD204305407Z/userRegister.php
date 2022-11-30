@@ -8,4 +8,6 @@ $insert_user = "INSERT INTO USUARI (nomUsuari, contrasenya) VALUES ('$user', '$p
 
 consultar("localhost", "root", "", $insert_user);
 
+session_start();
+$_SESSION["user"] = $reg['nomUsuari'];
 ?>

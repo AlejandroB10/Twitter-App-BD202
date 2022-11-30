@@ -29,7 +29,7 @@
                     <form method="POST" class="mt-10">
 
                         <div>
-                            <label for="user_name" class="text-gray-700 ml-2 text-sm">Porfavor introduzca un usuario<span class="text-red-400">*</span></label>
+                            <label for="user_name" class="text-gray-700 ml-2 text-sm">Usuario<span class="text-red-400">*</span></label>
                             <input type="text" name="user_name" id="user_name" class="pl-4 focus mt-1 block w-full border-none bg-gray-100 h-11 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
                         </div>
 
@@ -84,7 +84,7 @@
             },
             function(data) {
                 alert('Se ha registrado correctamente');
-                location.href = '../home.php';
+                location.href = 'profile.php';
             }
         );
     }
