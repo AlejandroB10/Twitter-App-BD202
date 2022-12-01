@@ -4,13 +4,29 @@
     include('../conexion.php');
 
     $user_query = "SELECT * FROM USUARI WHERE USUARI.nomUsuari = '$user'";
-
     $result = consultar("localhost", "root", "", $user_query);
-
-
     $reg = mysqli_fetch_array($result);
-    $user_data = ['usuari' => $reg['nomUsuari'], 'descripcio' => $reg['descripcio']];
 
+
+    $count_publi = "SELECT COUNT(PUBLICACIO.idPublicacio) AS publicacions FROM USUARI JOIN PUBLICACIO ON USUARI.nomUsuari = '$user' and USUARI.nomUsuari = PUBLICACIO.nomUsuari";
+    $result_count_publi = consultar("localhost", "root", "", $count_publi);
+    $reg_count_publi = mysqli_fetch_array($result_count_publi);
+
+    $count_follower = "SELECT COUNT(FOLLOW.nomUsuariSeguint) AS seguidores FROM USUARI JOIN FOLLOW ON USUARI.nomUsuari = '$user' and USUARI.nomUsuari = FOLLOW.nomUsuariSeguint";
+    $result_count_follower = consultar("localhost", "root", "", $count_follower);
+    $reg_count_follower = mysqli_fetch_array($result_count_follower);
+
+    $count_following = "SELECT COUNT(FOLLOW.nomUsuariSeguidor) AS siguiendo FROM USUARI JOIN FOLLOW ON USUARI.nomUsuari = 'marguis' and USUARI.nomUsuari = FOLLOW.nomUsuariSeguidor";
+    $result_count_following = consultar("localhost", "root", "", $count_following);
+    $reg_count_following = mysqli_fetch_array($result_count_following);
+
+    $user_data = [
+        'usuari' => $reg['nomUsuari'], 
+        'descripcio' => $reg['descripcio'], 
+        'publicacions' => $reg_count_publi['publicacions'],
+        'seguidors' => $reg_count_follower['seguidores'],
+        'seguint' => $reg_count_following['siguiendo']
+    ];
     ?>
 
  <!DOCTYPE html>
@@ -42,18 +58,18 @@
                      <div class="w-full text-center mt-20">
                          <div class="flex justify-center lg:pt-4 pt-8 pb-0">
                              <div class="p-3 text-center">
-                                 <span class="text-xl font-bold block uppercase tracking-wide text-slate-700">3,360</span>
+                                 <span class="text-xl font-bold block uppercase tracking-wide text-slate-700" id="count_publi"></span>
                                  <span class="text-sm text-slate-400">Publicaciones</span>
                              </div>
                              <a href="followers.php">
                                 <div class="p-3 text-center">
-                                    <span class="text-xl font-bold block uppercase tracking-wide text-slate-700">2,454</span>
+                                    <span class="text-xl font-bold block uppercase tracking-wide text-slate-700" id="count_follower"></span>
                                     <span class="text-sm text-slate-400">Followers</span>
                                 </div>
                             </a>
                             <a href="following.php">
                                 <div class="p-3 text-center">
-                                    <span class="text-xl font-bold block uppercase tracking-wide text-slate-700">564</span>
+                                    <span class="text-xl font-bold block uppercase tracking-wide text-slate-700" id="count_following"></span>
                                     <span class="text-sm text-slate-400">Following</span>
                                 </div>
                             </a>
@@ -228,6 +244,10 @@
 
          $('#nom_user').text(usuari);
          $('#desc_user').text(descripcio);
+         $('#count_publi').text(jsonData.publicacions);
+         $('#count_follower').text(jsonData.seguidors);
+         $('#count_following').text(jsonData.seguint);
+         
 
      });
      $('#comment').click(function() {

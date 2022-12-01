@@ -12,7 +12,7 @@
 
 <body>
     <header>
-        <?php include('../header.php'); ?>
+        <?php include('header.php'); ?>
     </header>
     <main>
         <div class="bg"></div>

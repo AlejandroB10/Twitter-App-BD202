@@ -7,14 +7,10 @@
             </a>
             <div class="flex items-center md:order-2">
 
-                <div>
-                    <input type="text" name="search_user" id="search_user" placeholder="Busca un usuario" class="pl-4 focus mt-1 block w-46 border-none bg-gray-100 h-10 mr- rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
-                    <buttom onclick="searchUser()" class="p-2 bg-gray-100 inline-block" id="accept_search">BUSCAR</buttom>
-                </div>
-                <!-- <button type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
+               <button type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
                     <span class="sr-only">Open user menu</span>
                     <img class="w-8 h-8 rounded-full" src="https://tailus.io/sources/blocks/grid-cards/preview/images/avatars/third_user.webp" alt="user photo">
-                </button> -->
+                </button> 
             </div>
             <div class="hidden justify-between items-center w-full md:flex md:w-auto md:order-1" id="mobile-menu-2">
                 <ul class="flex flex-col p-4 mt-4 bg-gray-50 rounded-lg border border-gray-100 md:flex-row md:space-x-8 md:mt-0 md:text-sm md:font-medium md:border-0 md:bg-white">
@@ -22,32 +18,19 @@
                         <a href="../home.php" class="block py-2 pr-4 pl-3 text-white bg-blue-700 rounded md:bg-transparent md:text-blue-700 md:p-0" aria-current="page">Home</a>
                     </li>
                     <li>
-                        <a href="profile.php" class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Mensaje</a>
+                        <a href="#" class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Mensaje</a>
+                    </li>
+                    <li>
+                        <a href="searchUser.php" class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Buscador</a>
                     </li>
                     <li>
                         <a href="#" class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Notificaciones</a>
                     </li>
                     <li>
-                        <a href="#" class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Perfil</a>
+                        <a href="profile.php" class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Perfil</a>
                     </li>
                 </ul>
             </div>
         </div>
     </nav>
 </div>
-
-<script>
-    function searchUser() {
-        let user = $('#search_user').val();
-
-        $.post('userLogin.php', {
-                user: user,
-            },
-            function(data) {
-                console.log(JSON.parse(data));
-                //alert('Has iniciado sesion correctamente '+JSON.parse(data).user );
-                location.href = 'profile.php';
-            }
-        );
-    }
-</script>
