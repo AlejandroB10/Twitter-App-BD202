@@ -4,19 +4,19 @@ $user = $_SESSION["user"];
 $user_profile = $_GET["id"];
 include('../conexion.php');
 
-$user_query = "SELECT * FROM USUARI WHERE USUARI.nomUsuari = '$user_profile'";
+$user_query = "SELECT * FROM usuari WHERE usuari.nomUsuari = '$user_profile'";
 $result = consultar("localhost", "root", "", $user_query);
 $reg = mysqli_fetch_array($result);
 
-$count_publi = "SELECT COUNT(PUBLICACIO.idPublicacio) AS publicacions FROM USUARI JOIN PUBLICACIO ON USUARI.nomUsuari = '$user_profile' and USUARI.nomUsuari = PUBLICACIO.nomUsuari";
+$count_publi = "SELECT COUNT(publicacio.idPublicacio) AS publicacions FROM usuari JOIN publicacio ON usuari.nomUsuari = '$user_profile' and usuari.nomUsuari = publicacio.nomUsuari";
 $result_count_publi = consultar("localhost", "root", "", $count_publi);
 $reg_count_publi = mysqli_fetch_array($result_count_publi);
 
-$count_follower = "SELECT COUNT(FOLLOW.nomUsuariSeguint) AS seguidores FROM USUARI JOIN FOLLOW ON USUARI.nomUsuari = '$user_profile' and USUARI.nomUsuari = FOLLOW.nomUsuariSeguint";
+$count_follower = "SELECT COUNT(follow.nomUsuariSeguint) AS seguidores FROM usuari JOIN follow ON usuari.nomUsuari = '$user_profile' and usuari.nomUsuari = follow.nomUsuariSeguint";
 $result_count_follower = consultar("localhost", "root", "", $count_follower);
 $reg_count_follower = mysqli_fetch_array($result_count_follower);
 
-$count_following = "SELECT COUNT(FOLLOW.nomUsuariSeguidor) AS siguiendo FROM USUARI JOIN FOLLOW ON USUARI.nomUsuari = '$user_profile' and USUARI.nomUsuari = FOLLOW.nomUsuariSeguidor";
+$count_following = "SELECT COUNT(follow.nomUsuariSeguidor) AS siguiendo FROM usuari JOIN follow ON usuari.nomUsuari = '$user_profile' and usuari.nomUsuari = follow.nomUsuariSeguidor";
 $result_count_following = consultar("localhost", "root", "", $count_following);
 $reg_count_following = mysqli_fetch_array($result_count_following);
 $user_data = [
@@ -89,7 +89,7 @@ $user_data = [
                     <h3 class="text-2xl text-slate-700 font-bold leading-normal mb-1" id="nom_user"></h3>
                     <div class="flex flex-row justify-center items-center">
                         <?php
-                        $query_follow = "SELECT * FROM FOLLOW WHERE FOLLOW.nomUsuariSeguidor = '$user' AND FOLLOW.nomUsuariSeguint = '$user_profile'";
+                        $query_follow = "SELECT * FROM follow WHERE follow.nomUsuariSeguidor = '$user' AND follow.nomUsuariSeguint = '$user_profile'";
                         $result_follow = consultar("localhost", "root", "", $query_follow);
                         if (!$reg = mysqli_fetch_array($result_follow)) { ?>
                         <a class="text-sm mt-0 mb-2 text-slate-400 font-bold text-center border rounded-full px-1 py-1 w-20 mt-5"
@@ -142,8 +142,8 @@ $user_data = [
                 <!-- Publicaciones -->
                 <div class="grid items-center justify-center mt-16" id="publications">
                     <?php
-                    $publi_query = "SELECT idPublicacio, titlePub, textPub, USUARI.nomUsuari, dataPub FROM PUBLICACIO 
-                        JOIN USUARI ON PUBLICACIO.nomUsuari = '$user_profile' and USUARI.nomUsuari = PUBLICACIO.nomUsuari ORDER BY dataPub DESC";
+                    $publi_query = "SELECT idPublicacio, titlePub, textPub, usuari.nomUsuari, dataPub FROM publicacio 
+                        JOIN usuari ON publicacio.nomUsuari = '$user_profile' and usuari.nomUsuari = publicacio.nomUsuari ORDER BY dataPub DESC";
                     $result_publi = consultar("localhost", "root", "", $publi_query);
                     while ($fila = mysqli_fetch_array($result_publi)): ?>
 
@@ -197,7 +197,7 @@ $user_data = [
                     <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
 
                         <?php
-                        $history_query = "SELECT * FROM HISTORIA";
+                        $history_query = "SELECT * FROM historia";
                         $result_history = consultar("localhost", "root", "", $history_query);
                         while ($fila = mysqli_fetch_array($result_history)): ?>
                         <a href="showPubli.php?idHistorias=<?= $fila['idHistoria'] ?>">

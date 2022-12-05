@@ -38,7 +38,7 @@ include('../conexion.php'); ?>
                 <div class="flex flex-col justify-center">
                     <?php
                     $idHistoria = $_GET['idHistorias'];
-                    $show_title_text = "SELECT HISTORIA.titleHist, HISTORIA.textHist FROM HISTORIA WHERE HISTORIA.idHistoria = '$idHistoria'";
+                    $show_title_text = "SELECT historia.titleHist, historia.textHist FROM historia WHERE historia.idHistoria = '$idHistoria'";
                     $result_title = consultar("localhost", "root", "", $show_title_text);
                     while ($fila = mysqli_fetch_array($result_title)) { ?>
                         <h3 class="text-2xl font-bold text-center"><?= $fila['titleHist'] ?></h3>
@@ -62,10 +62,10 @@ include('../conexion.php'); ?>
                     <?php
                     if (isset($_GET['idHistorias'])) {
                         $idHistoria = $_GET['idHistorias'];
-                        $show_publi = "SELECT HISTORIA.titleHist, PUBLICACIO.titlePub, PUBLICACIO.textPub, PUBLICACIO.nomUsuari 
-                            FROM HISTORIA 
-                            JOIN PUBLICACIO ON HISTORIA.idHistoria = '$idHistoria' and HISTORIA.idHistoria = PUBLICACIO.idHistoria 
-                            ORDER BY PUBLICACIO.dataPub DESC";
+                        $show_publi = "SELECT historia.titleHist, publicacio.titlePub, publicacio.textPub, publicacio.nomUsuari 
+                            FROM historia 
+                            JOIN publicacio ON historia.idHistoria = '$idHistoria' and historia.idHistoria = publicacio.idHistoria 
+                            ORDER BY publicacio.dataPub DESC";
                         $result_show_publi = consultar("localhost", "root", "", $show_publi);
 
                         while ($fila = mysqli_fetch_array($result_show_publi)) { ?>

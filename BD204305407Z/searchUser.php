@@ -34,11 +34,11 @@ include('../conexion.php'); ?>
                 </div>
                 <div class="grid grid-cols-3 gap-3" id="show_divs">
                     <?php
-                    $user_query = "SELECT * FROM USUARI WHERE USUARI.nomUsuari != '$user'";
+                    $user_query = "SELECT * FROM usuari WHERE usuari.nomUsuari != '$user'";
                     $result = consultar("localhost", "root", "", $user_query);
                     while ($reg = mysqli_fetch_array($result)) {
                         $following = $reg['nomUsuari'];
-                        $query_follow = "SELECT * FROM FOLLOW WHERE FOLLOW.nomUsuariSeguidor = '$user' AND FOLLOW.nomUsuariSeguint = '$following'";
+                        $query_follow = "SELECT * FROM follow WHERE follow.nomUsuariSeguidor = '$user' AND follow.nomUsuariSeguint = '$following'";
                         $result_follow = consultar("localhost", "root", "", $query_follow);
                         $r = rand(0, 2);
                         if ($r == 0) { ?>
@@ -161,8 +161,6 @@ include('../conexion.php'); ?>
 <script src="../lib/jquery-3.6.1.min.js"></script>
 <script>
     function unfollowing_buttom(user, user_following) {
-        console.log(user);
-        console.log(user_following);
         alertify.confirm("Dejar de seguir",
             "Dejar de seguir, pero si cambias de opinión tendrás que volver a enviar una solicitud para seguir a " + user_following,
             function () {

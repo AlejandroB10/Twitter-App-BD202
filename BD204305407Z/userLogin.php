@@ -3,7 +3,7 @@ $user = $_POST['user'];
 $password = $_POST['password'];
 
 include('../conexion.php');
-$user_query = "SELECT * FROM USUARI WHERE USUARI.nomUsuari = '$user' AND USUARI.contrasenya = '$password'";
+$user_query = "SELECT * FROM usuari WHERE usuari.nomUsuari = '$user' AND usuari.contrasenya = '$password'";
 $result = consultar("localhost", "root", "", $user_query);
 
 if (($reg = mysqli_fetch_array($result))) {

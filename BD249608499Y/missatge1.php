@@ -1,7 +1,7 @@
 <?php
 
-
-$nomUsuari = 'marc';
+session_start();
+$nomUsuari = 'tuti';
 
 include('../conexion.php');
 // include('chat.php');
@@ -88,7 +88,7 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Missatge</title>
     <link rel="stylesheet" href="../lib/app.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../tailwind.js"></script>
 </head>
 
 <body>

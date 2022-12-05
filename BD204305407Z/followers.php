@@ -56,7 +56,7 @@ include('../conexion.php'); ?>
                 </div>
                 <div class="grid grid-cols-3 gap-3">
                     <?php
-                    $follower_query = "SELECT * FROM FOLLOW WHERE FOLLOW.nomUsuariSeguint = '$user'";
+                    $follower_query = "SELECT * FROM follow WHERE follow.nomUsuariSeguint = '$user'";
                     $result_follower = consultar("localhost", "root", "", $follower_query);
                     while ($fila = mysqli_fetch_array($result_follower)) { ?>
                     <div class="container ">

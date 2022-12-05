@@ -3,7 +3,7 @@ session_start();
 $user = $_SESSION["user"];
 include('../conexion.php');
 
-$user_query = "SELECT * FROM USUARI WHERE USUARI.nomUsuari = '$user'";
+$user_query = "SELECT * FROM usuari WHERE usuari.nomUsuari = '$user'";
 
 $result = consultar("localhost", "root", "", $user_query);
 
