@@ -4,10 +4,9 @@ include('../conexion.php');
 $user = $_POST['user'];
 $password = $_POST['password'];
 
-$insert_user = "INSERT INTO USUARI (nomUsuari, contrasenya) VALUES ('$user', '$password')";
+$insert_user = "SELECT addUser('{$user}', '{$password}')";
 
-consultar("localhost", "root", "", $insert_user);
+$result = consultar("localhost", "root", "", $insert_user);
 
-session_start();
-$_SESSION["user"] = $reg['nomUsuari'];
+echo json_encode(mysqli_fetch_array($result));
 ?>

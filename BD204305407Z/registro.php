@@ -7,7 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Registro</title>
     <link rel="stylesheet" href="../lib/app.css">
+    <link rel="stylesheet" type="text/css" href="../alertifyjs/css/alertify.css">
+    <link rel="stylesheet" type="text/css" href="../alertifyjs/css/themes/default.css">
     <script src="../tailwind.js"></script>
+    <script src="../alertifyjs/alertify.js"></script>
 </head>
 
 <body>
@@ -65,26 +68,56 @@
         <?php include('../footer.php'); ?>
     </footer>
 </body>
+
 </html>
 <script src="../lib/jquery-3.6.1.min.js"></script>
 <script>
     function registerUser() {
-        let user = $('#user_name').val();
-        let password = $('#passw').val()
+        var user = $('#user_name').val();
+        var password = $('#passw').val()
 
         if (!user) {
-            alert('Introduzca un usuario');
+            alertify.error("Rellene el campo de usuario", 3);
+            return;
         }
         if (!password) {
-            alert("Introduzca la contrasenya");
-        }        
+            alertify.error("Rellene el campo de contraseña", 3);
+            return;
+        }
         $.post('userRegister.php', {
                 user: user,
                 password: password
             },
             function(data) {
-                alert('Se ha registrado correctamente');
-                location.href = 'profile.php';
+
+                const value = parseInt(JSON.parse(data)["0"]);
+                console.log(value);
+                if (value === 0) {
+                    alertify.error("El nombre de usuario seleccionado ya existe", 3);
+                    $('#user_name').addClass("border-2 border-red-500");
+                } else {
+                    $.post("userLogin.php", {
+                            user: user,
+                            password: password
+                        },
+                        function(data) {
+                            if (JSON.parse(data).user === "UserNotFound") {
+                                alertify.error("El nombre de usuario o la contraseña son incorrectos", 3);
+                                $('#user_name').addClass("border-2 border-red-500");
+                                $('#passw').addClass("border-2 border-red-500");
+                            } else {
+                                var alert = alertify.alert('Atención', 'Usuario creado correctamente');
+                                alert.set('closable', false);
+                                alert.set('movable', false);
+                                alert.set('onok', (closeEvent) => {
+                                    location = "profile.php";
+                                    return false;
+                                })
+                            }
+
+                        }
+                    );
+                }
             }
         );
     }
