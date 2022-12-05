@@ -7,7 +7,10 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login</title>
     <link rel="stylesheet" href="../lib/app.css">
+    <link rel="stylesheet" type="text/css" href="../alertifyjs/css/alertify.css">
+    <link rel="stylesheet" type="text/css" href="../alertifyjs/css/themes/default.css">
     <script src="../tailwind.js"></script>
+    <script src="../alertifyjs/alertify.js"></script>
 </head>
 
 <body>
@@ -76,10 +79,12 @@
         let password = $('#passw').val()
 
         if (!user) {
-            alert('Introduzca un usuario');
+            alertify.error("Por favor, ingrese su usuario");
+            return;
         }
         if (!password) {
-            alert("Introduzca la contrasenya");
+            alertify.error("Por favor, ingrese su contraseña", 2);
+            return;
         }
 
         $.post('userLogin.php', {
@@ -87,9 +92,15 @@
                 password: password
             },
             function(data) {
-                console.log( JSON.parse(data));
-                //alert('Has iniciado sesion correctamente '+JSON.parse(data).user );
-                location.href = 'profile.php';
+                if (JSON.parse(data).user === "UserNotFound") {
+                    alertify.error("El nombre de usuario o la contraseña son incorrectos", 3);
+                    $('#user_name').addClass("border-2 border-red-500");
+                    $('#passw').addClass("border-2 border-red-500");
+                } else {
+                    console.log(JSON.parse(data));
+                    //alert('Has iniciado sesion correctamente '+JSON.parse(data).user );
+                    location.href = 'profile.php';
+                }
             }
         );
     }
