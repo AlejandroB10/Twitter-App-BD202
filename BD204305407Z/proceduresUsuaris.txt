@@ -1,0 +1,15 @@
+
+DELIMITER //
+CREATE FUNCTION addUser(username varchar(25), pass varchar(25)) 
+RETURNS BOOLEAN
+BEGIN
+	DECLARE EXIT HANDLER FOR 1062 RETURN FALSE;#Si el usuario ya existe devolvera false
+    
+    #Introducimos el usuario
+    INSERT INTO USUARI(nomUsuari, contrasenya)
+    VALUES(
+    	username, pass
+    );
+    RETURN TRUE;
+END
+//
