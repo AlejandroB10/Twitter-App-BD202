@@ -3,7 +3,7 @@
         <div class="container flex flex-wrap justify-between items-center mx-auto">
             <a href="https://flowbite.com/" class="flex items-center">
                 <img src="https://flowbite.com/docs/images/logo.svg" class="mr-3 h-6 sm:h-9" alt="Flowbite Logo">
-                <span class="self-center text-xl font-semibold whitespace-nowrap">Tinderinfo</span>
+                <span class="self-center text-xl font-semibold whitespace-nowrap">Whatsinfo</span>
             </a>
             <div class="flex items-center md:order-2">
                 <button type="button" class="flex mr-3 text-sm bg-gray-800 rounded-full md:mr-0 focus:ring-4 focus:ring-gray-300" id="user-menu-button" aria-expanded="false" data-dropdown-toggle="user-dropdown" data-dropdown-placement="bottom">
