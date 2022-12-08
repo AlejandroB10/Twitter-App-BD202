@@ -45,6 +45,10 @@ include('../conexion.php');
 
 
             $result_publi = consultar("localhost", "root", "", $publicacions_query);
+
+            session_start();
+            $user = $_SESSION['user'];
+
             while ($fila = mysqli_fetch_array($result_publi)) : ?>
 
                 <div class="p-6 bg-white shadow-lg flex justify-start rounded-lg my-8 sm:flex sm:space-x-8 sm:p-8 w-full">
@@ -61,11 +65,18 @@ include('../conexion.php');
 
                         <div class="grid grid-cols-3 gap-4 mt-4">
                             <div class="col-span-2 flex items-center justify-start">
-                                <!-- <a href="#" class="text-base font-medium text-gray-500 mr-4" id="comment">
-                                        <lord-icon src="https://cdn.lordicon.com/hpivxauj.json" trigger="hover"
-                                            style="width:22x;height:22px">
+                                <?php
+                                if ($fila['nomUsuari'] == $user){
+                                ?>
+
+                                <a href="editarPub.php?id=<?=$fila['idPublicacio']?>">
+                                    <span class="block flex items-center justify-center font-semibold w-28 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
+                                        Editar
+                                        <lord-icon src="https://cdn.lordicon.com/wloilxuq.json" trigger="hover" class="ml-2" style="width:30px;height:30px;color: rgb(148 163 184);">
                                         </lord-icon>
-                                    </a> -->
+                                    </span>
+                                </a>
+                                <?php } else { ?>
                                 <a href="#">
                                     <span class="block flex items-center justify-center font-semibold w-32 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
                                         Compartir
@@ -73,6 +84,7 @@ include('../conexion.php');
                                         </lord-icon>
                                     </span>
                                 </a>
+                                <?php } ?>
                             </div>
                             <div class="flex justify-end">
                                 <a href="#" class="text-base font-semibold text-indigo-500">
