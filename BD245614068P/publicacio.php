@@ -66,24 +66,31 @@ include('../conexion.php');
                         <div class="grid grid-cols-3 gap-4 mt-4">
                             <div class="col-span-2 flex items-center justify-start">
                                 <?php
-                                if ($fila['nomUsuari'] == $user){
+                                if ($fila['nomUsuari'] == $user) {
                                 ?>
 
-                                <a href="editarPub.php?id=<?=$fila['idPublicacio']?>">
-                                    <span class="block flex items-center justify-center font-semibold w-28 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
-                                        Editar
-                                        <lord-icon src="https://cdn.lordicon.com/wloilxuq.json" trigger="hover" class="ml-2" style="width:30px;height:30px;color: rgb(148 163 184);">
-                                        </lord-icon>
-                                    </span>
-                                </a>
+                                    <a href="editarPub.php?id=<?= $fila['idPublicacio'] ?>">
+                                        <span class="block flex items-center justify-center font-semibold w-28 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
+                                            Editar
+                                            <lord-icon src="https://cdn.lordicon.com/wloilxuq.json" trigger="hover" class="ml-2" style="width:30px;height:30px;color: rgb(148 163 184);">
+                                            </lord-icon>
+                                        </span>
+                                    </a>
+                                    <a href="deletePub.php?id=<?= $fila['idPublicacio'] ?>">
+                                        <span class="block flex items-center justify-center font-semibold w-28 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
+                                            Borrar
+                                            <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="hover" style="width:30px;height:30px">
+                                                </lord-icon>
+                                        </span>
+                                    </a>
                                 <?php } else { ?>
-                                <a href="#">
-                                    <span class="block flex items-center justify-center font-semibold w-32 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
-                                        Compartir
-                                        <lord-icon src="https://cdn.lordicon.com/akuwjdzh.json" trigger="hover" class="ml-2" style="width:22px;height:22px;color: rgb(148 163 184);">
-                                        </lord-icon>
-                                    </span>
-                                </a>
+                                    <a href="#">
+                                        <span class="block flex items-center justify-center font-semibold w-32 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
+                                            Compartir
+                                            <lord-icon src="https://cdn.lordicon.com/akuwjdzh.json" trigger="hover" class="ml-2" style="width:22px;height:22px;color: rgb(148 163 184);">
+                                            </lord-icon>
+                                        </span>
+                                    </a>
                                 <?php } ?>
                             </div>
                             <div class="flex justify-end">
