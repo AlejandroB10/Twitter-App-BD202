@@ -25,12 +25,16 @@
             <div class="grid items-center justify-center mt-16" id="publications">
                 <?php
                 $publi_query = "SELECT idPublicacio, titlePub, textPub, USUARI.nomUsuari, dataPub FROM PUBLICACIO 
-                        JOIN USUARI ON PUBLICACIO.nomUsuari = '$user' and USUARI.nomUsuari = PUBLICACIO.nomyUsuari ORDER BY dataPub DESC";
+                        JOIN USUARI ON PUBLICACIO.nomUsuari = '$user' and USUARI.nomUsuari = PUBLICACIO.nomUsuari ORDER BY dataPub DESC";
                 $result_publi = consultar("localhost", "root", "", $publi_query);
                 //insert
-                $insert_query = "INSERT INTO resposta (idResposta, dataRes, missatgeRes, idPublicacio, nomUsuari) VALUES (NULL,current_timestamp(),'[value-3]','[value-4]',$user)";
+                $idR = mysqli_fetch_array($result_publi);
+                $id = $idR['idPublicacio'];
+                $insert_query = "INSERT INTO resposta (missatgeRes, idPublicacio, nomUsuari) VALUES ('hola','$id','$user')";
+                $insert_result = consultar("localhost", "root", "", $insert_query);
                 
-                while ($fila = mysqli_fetch_array($result_publi)) : ?>
+                $result_publicacio = consultar("localhost", "root", "", $publi_query);
+                while ($fila = mysqli_fetch_array($result_publicacio)) : ?>
 
                     <div class="p-6 bg-white shadow-lg flex justify-start rounded-lg my-8 sm:flex sm:space-x-8 sm:p-8">
 
