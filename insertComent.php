@@ -9,12 +9,11 @@ $publi_query = "SELECT idPublicacio, titlePub, textPub, USUARI.nomUsuari, dataPu
 $result_publi = consultar("localhost", "root", "", $publi_query);
 $idR = mysqli_fetch_array($result_publi);
 $id = $idR['idPublicacio'];
-//$nom = $_GET["nom"];
-
+//mirar porque se insertan siempre en la misma publicación
 $string="INSERT INTO resposta (missatgeRes, idPublicacio, nomUsuari) VALUES ('$missatge','$id','$user')";
 echo $string;
 
 $insert=consultar("localhost", "root", "", $string);
 ?>
 
-<meta http-equiv="refresh" content="5; url=home.php">
+<meta http-equiv="refresh" content="0; url=home.php">
