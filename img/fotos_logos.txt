@@ -1,0 +1,122 @@
+<div class="col-lg-7">
+     <input type="file" class="form-control" id="emp_logo" name="emp_logo[]">
+     <span class="form-text text-muted">Tamaño de imagen recomendado: 100px x 66px</span>
+</div>
+
+        let nombre = $("#emp_nombre").val();
+        let cif = $("#emp_cif").val();
+        let direccion = $("#emp_direccion").val();
+        let pais = $("#emp_pais").val();
+        let provincia = $("#emp_provincia").val();
+        let municipio = $("#emp_municipio").val();
+        let codigo_postal = $("#emp_codigo").val();
+        let email = $("#emp_email").val();
+        let telefono = $("#emp_telefono").val();
+        let url = $("#emp_url").val();
+        let input_photo = $("#emp_logo").prop('files')[0];
+        let texto = $("#emp_text").val();
+
+       
+
+        var form_data = new FormData();
+        form_data.append('edit_company', id_empresa);
+        form_data.append('emp_nombre', nombre);
+        form_data.append('emp_cif', cif);
+        form_data.append('emp_direccion', direccion);
+        form_data.append('emp_pais', pais);
+        form_data.append('emp_provincia', provincia);
+        form_data.append('emp_municipio', municipio);
+        form_data.append('emp_codigo', codigo_postal);
+        form_data.append('emp_email', email);
+        form_data.append('emp_telefono', telefono);
+        form_data.append('emp_url', url);
+        form_data.append('emp_logo[]', input_photo);
+        form_data.append('emp_text', texto)
+        $.ajax({
+            url: 'update_empresa.php',
+            dataType: 'text',
+            cache: false,
+            contentType: false,
+            processData: false,
+            data: form_data,
+            type: 'post',
+            success: function(response) {
+                location.href = "conf_empresa.php";
+                console.log(response);
+            }
+        });
+
+
+    $_edit_nombre = mysqli_real_escape_string($conexion, $edit_nombre);
+    $_edit_cif = mysqli_real_escape_string($conexion, $edit_cif);
+
+    $image_types = array(
+        "image/png" => ".png",
+        "image/webp" => ".webp",
+        "image/jpeg" => ".jpg",
+        "image/jpeg" => ".jpeg"
+    );
+
+    $dir_subida = 'logos/';
+    if (!empty($_FILES['emp_logo'])) {
+        $ext = $image_types[$_FILES['emp_logo']['type'][0]];
+                if ($ext) {
+                    $name_file = $_FILES['emp_logo']['name'][0];
+                    $filename = uniqid(mt_rand(), true) . $ext;
+                    $fichero_subido = $dir_subida . $filename;
+                    echo $fichero_subido;
+
+                
+                   if (move_uploaded_file($_FILES['emp_logo']['tmp_name'][0], $fichero_subido )){
+
+                 //  };
+                    
+                   //  $fichero_subido_webp = compressImage($_FILES['emp_logo']['tmp_name'][0], $fichero_subido, 90);
+                    $sql = "SELECT * FROM empresa WHERE id_empresa = '$id_emp'";
+                    $resultado = mysqli_query( $conexion, $sql ) or die ("Conexion erronea"); 
+                    $hayregistro = mysqli_num_rows($resultado);
+                    if($hayregistro == 1){ 
+                        while($fila = mysqli_fetch_assoc($resultado)){
+                            //procederemos a borrar el archivo
+                            $logo_user = $fila['empresa_logo'];
+                            if (file_exists($logo_user) && is_readable($logo_user)) {
+                                unlink($logo_user);
+                            }
+                        }
+                    }
+                    $sql_update_photo = "UPDATE empresa SET empresa_logo = '$fichero_subido' WHERE id_empresa = '$id_emp'";
+                    echo $sql_update_photo;
+                    $resultado_insert = mysqli_query($conexion, $sql_update_photo) or die("error");
+                    }
+                } else {
+                    $ext_error = 1;
+                    $txt_error = 'La extensión de alguno de los ficheros no es válida, han de ser en el formato jpg, jpeg, png o webp.';
+                }
+    }
+
+    $edit_nombre = $_POST['emp_nombre'];
+    $edit_cif = $_POST['emp_cif'];
+    $edit_direccion = $_POST['emp_direccion'];
+    $edit_pais = $_POST['emp_pais'];
+    $edit_provincia = $_POST['emp_provincia'];
+    $edit_municipio = $_POST['emp_municipio'];
+    $edit_codigo_postal = $_POST['emp_codigo'];
+    $edit_email = $_POST['emp_email'];
+    $edit_telefono = $_POST['emp_telefono'];
+    $edit_url = $_POST['emp_url'];
+    //$edit_logo = $_POST['emp_logo'];
+    $edit_texto = $_POST['emp_text'];
+
+hay que estar como root
+chmod ugo+rwx logos
+
+
+INSERT INTO empresa (empresa_nombre, empresa_cif, empresa_direccion, empresa_pais, empresa_provincia,
+    empresa_municipio, empresa_codigo_postal, empresa_email, empresa_telefono, empresa_url, empresa_texto_pie_pagina) VALUES ('$edit_nombre', '$edit_cif', '$edit_direccion', '$edit_pais', '$$edit_provincia', '$edit_municipio',
+    '$edit_codigo_postal', '$edit_email', '$edit_telefono', '$edit_url', '$edit_texto')";
+
+
+
+
+
+

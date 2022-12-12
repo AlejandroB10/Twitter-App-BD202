@@ -53,8 +53,20 @@ $user_data = [
                 <div class="flex flex-wrap justify-center">
                     <div class="w-full flex justify-center">
                         <div class="relative">
-                            <img src="https://tailus.io/sources/blocks/grid-cards/preview/images/avatars/third_user.webp"
-                                class="shadow-xl rounded-full align-middle border-none absolute -m-16 -ml-20 lg:-ml-16 max-w-[150px]" />
+                            <?php $user_query_img_profile = "SELECT img_profile FROM usuari WHERE usuari.nomUsuari = '$user'";
+                            $result_img = consultar("localhost", "root", "", $user_query_img_profile);
+                            $reg_img = mysqli_fetch_array($result_img);
+                            if (!empty($reg_img['img_profile'])) {
+                            ?>
+                            <img src=<?= $reg_img['img_profile'] ?>
+                            class="shadow-xl rounded-full align-middle border-none absolute -m-16 -ml-20 lg:-ml-16
+                            max-w-[150px]" />
+                            <?php
+                            } else {
+                            ?>
+                            <img src="../img/profile_picture_default.png" class="shadow-xl rounded-full align-middle border-none absolute -m-16 -ml-20 lg:-ml-16
+                            max-w-[150px]" />
+                            <?php } ?>
                         </div>
                     </div>
                     <div class="w-full text-center mt-20">
@@ -124,16 +136,23 @@ $user_data = [
                 <!-- Publicaciones -->
                 <div class="grid items-center justify-center mt-16" id="publications">
                     <?php
-                    $publi_query = "SELECT idPublicacio, titlePub, textPub, usuari.nomUsuari, dataPub FROM publicacio 
+                    $publi_query = "SELECT idPublicacio, titlePub, textPub, usuari.nomUsuari, usuari.img_profile, dataPub FROM publicacio 
                         JOIN usuari ON publicacio.nomUsuari = '$user' and usuari.nomUsuari = publicacio.nomUsuari ORDER BY dataPub DESC";
                     $result_publi = consultar("localhost", "root", "", $publi_query);
                     while ($fila = mysqli_fetch_array($result_publi)): ?>
 
                     <div class="p-6 bg-white shadow-lg flex justify-start rounded-lg my-8 sm:flex sm:space-x-8 sm:p-8">
 
-                        <img class="w-20 h-20 flex items-center rounded-full"
-                            src="https://tailus.io/sources/blocks/grid-cards/preview/images/avatars/third_user.webp"
+                        <?php
+                        if (!empty($fila['img_profile'])) { ?>
+                        <img class="w-20 h-20 flex items-center rounded-full" src=<?= $fila['img_profile'] ?>
+                        alt="user avatar" height="220" width="220" loading="lazy">
+                        <?php
+                        } else {
+                        ?>
+                        <img class="w-20 h-20 flex items-center rounded-full" src="../img/profile_picture_default.png"
                             alt="user avatar" height="220" width="220" loading="lazy">
+                        <?php } ?>
 
                         <div class="space-y-4 mt-4 text-center sm:mt-0 sm:text-left w-full">
                             <h2 class="text-gray-800 text-lg mb-1 font-semibold">
@@ -154,8 +173,8 @@ $user_data = [
                                         <span
                                             class="block flex items-center justify-center font-semibold w-32 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
                                             Compartir
-                                            <lord-icon src="https://cdn.lordicon.com/akuwjdzh.json" trigger="hover" class="ml-2"
-                                                style="width:22px;height:22px;color: rgb(148 163 184);">
+                                            <lord-icon src="https://cdn.lordicon.com/akuwjdzh.json" trigger="hover"
+                                                class="ml-2" style="width:22px;height:22px;color: rgb(148 163 184);">
                                             </lord-icon>
                                         </span>
                                     </a>
@@ -233,23 +252,32 @@ $user_data = [
                 <!-- Compartir  -->
                 <div style="display: none;" id="share" class="grid items-center justify-center mt-16" id="publications">
                     <?php
-                    $publi_query = "SELECT idPublicacio, titlePub, textPub, usuari.nomUsuari, dataPub FROM publicacio 
+                    $publi_query = "SELECT idPublicacio, titlePub, textPub, usuari.nomUsuari, usuari.img_profile, dataPub FROM publicacio 
                         JOIN usuari ON publicacio.nomUsuari = '$user' and usuari.nomUsuari = publicacio.nomUsuari ORDER BY dataPub DESC";
                     $result_publi = consultar("localhost", "root", "", $publi_query);
                     while ($fila = mysqli_fetch_array($result_publi)): ?>
 
                     <div class="grid grid-cols-2 gap-2">
                         <div class="mt-4 col-span-2 text-center sm:mt-0 sm:text-left w-full">
-                            <p class="text-sm ml-4">Compartido por: <a href="#" class="text-base font-semibold text-indigo-500">Alex</a></p>
+                            <p class="text-sm ml-4">Compartido por: <a href="#"
+                                    class="text-base font-semibold text-indigo-500">Alex</a></p>
                             <hr class="mt-2 mx-4">
                         </div>
 
                         <div
                             class="p-6 bg-white shadow-lg flex col-span-2 justify-start rounded-lg mb-8 sm:flex sm:space-x-8 sm:p-8">
 
+                            <?php
+                        if (!empty($fila['img_profile'])) { ?>
+                            <img class="w-20 h-20 flex items-center rounded-full" src=<?= $fila['img_profile'] ?>
+                            alt="user avatar" height="220" width="220" loading="lazy">
+                            <?php
+                        } else {
+                        ?>
                             <img class="w-20 h-20 flex items-center rounded-full"
-                                src="https://tailus.io/sources/blocks/grid-cards/preview/images/avatars/third_user.webp"
-                                alt="user avatar" height="220" width="220" loading="lazy">
+                                src="../img/profile_picture_default.png" alt="user avatar" height="220" width="220"
+                                loading="lazy">
+                            <?php } ?>
 
                             <div class="space-y-4 mt-4 text-center sm:mt-0 sm:text-left w-full">
                                 <h2 class="text-gray-800 text-lg mb-1 font-semibold">
@@ -360,13 +388,6 @@ $user_data = [
 
 
     });
-    // $('#comment').click(function () {
-    //     if ($('#comentaris').is(':visible')) {
-    //         $('#comentaris').hide();
-    //     } else {
-    //         $('#comentaris').show();
-    //     }
-    // })
     $('#publication_buttom').click(function () {
         $('#publications').show();
         $('#history').hide();

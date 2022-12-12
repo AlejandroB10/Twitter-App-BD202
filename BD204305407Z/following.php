@@ -58,15 +58,26 @@ include('../conexion.php'); ?>
                     <?php
                     $following_query = "SELECT * FROM follow WHERE follow.nomUsuariSeguidor = '$user'";
                     $result_following = consultar("localhost", "root", "", $following_query);
-                    while ($fila = mysqli_fetch_array($result_following)) { ?>
+                    while ($fila = mysqli_fetch_array($result_following)) {
+                        $following = $fila['nomUsuariSeguint'];
+                        $following_user = "SELECT usuari.img_profile FROM usuari WHERE usuari.nomUsuari = '$following'";
+                        $result_following_user = consultar("localhost", "root", "", $following_user);
+                        while ($reg = mysqli_fetch_array($result_following_user)) {
+                    ?>
                     <div class="container ">
                         <a href="profileUser.php?id=<?= $fila['nomUsuariSeguint'] ?>">
                             <div
                                 class="m-auto my-8 w-full max-w-lg items-center justify-center overflow-hidden rounded-2xl bg-blue-100 shadow-xl">
                                 <div class="h-24 bg-white"></div>
                                 <div class="-mt-20 flex justify-center">
-                                    <img class="h-32 rounded-full"
-                                        src="https://media.istockphoto.com/vectors/male-profile-flat-blue-simple-icon-with-long-shadow-vector-id522855255?k=20&m=522855255&s=612x612&w=0&h=fLLvwEbgOmSzk1_jQ0MgDATEVcVOh_kqEe0rqi7aM5A=" />
+                                    <?php
+                            if (!empty($reg['img_profile'])) { ?>
+                                    <img class="h-32 rounded-full" src=<?= $reg['img_profile'] ?> />
+                                    <?php
+                            } else {
+                                    ?>
+                                    <img class="h-32 rounded-full" src="../img/profile_picture_default.png" />
+                                    <?php } ?>
                                 </div>
                                 <div class="mt-2 mb-1 px-3 text-center text-lg">
                                     <?= $fila['nomUsuariSeguint'] ?>
@@ -79,7 +90,10 @@ include('../conexion.php'); ?>
                         </a>
                     </div>
 
-                    <?php } ?>
+                    <?php
+                        }
+                    }
+                    ?>
                 </div>
             </div>
         </div>
