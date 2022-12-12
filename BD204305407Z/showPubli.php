@@ -1,5 +1,7 @@
 <?php
-include('../conexion.php'); ?>
+include('../conexion.php'); 
+$idHistoria = $_GET['idHistorias'];
+?>
 <!DOCTYPE html>
 <html lang="en">
 
@@ -29,7 +31,7 @@ include('../conexion.php'); ?>
                             </lord-icon>
                         </div>
                     </a>
-                    <a href="#">
+                    <a href="../BD245614068P/editarHist.php?id=<?= $idHistoria?>">
                         <div>
                             <lord-icon src="https://cdn.lordicon.com/wloilxuq.json" trigger="hover"
                                 style="width:40px;height:40px">
@@ -37,10 +39,17 @@ include('../conexion.php'); ?>
                             <span class="text-center text-xs block">Editar</span>
                         </div>
                     </a>
+                    <a href="../BD245614068P/deleteHist.php?id=<?= $idHistoria?>">
+                        <div>
+                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="hover" 
+                            style="width:40px;height:40px">
+                        </lord-icon>
+                            <span class="text-center text-xs block">Borrar</span>
+                        </div>
+                    </a>
                 </div>
                 <div class="flex flex-col justify-center">
                     <?php
-                    $idHistoria = $_GET['idHistorias'];
                     $show_title_text = "SELECT historia.titleHist, historia.textHist FROM historia WHERE historia.idHistoria = '$idHistoria'";
                     $result_title = consultar("localhost", "root", "", $show_title_text);
                     while ($fila = mysqli_fetch_array($result_title)) { ?>

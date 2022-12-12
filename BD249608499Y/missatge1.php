@@ -1,7 +1,7 @@
 <?php
 
 session_start();
-$nomUsuari = 'tuti';
+$nomUsuari = $_SESSION["user"];
 
 include('../conexion.php');
 // include('chat.php');
@@ -88,7 +88,7 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Missatge</title>
     <link rel="stylesheet" href="../lib/app.css">
-    <script src="../tailwind.js"></script>
+    <script src="https://cdn.tailwindcss.com"></script>
 </head>
 
 <body>
@@ -325,7 +325,6 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
         var url = "insertMissatge.php";
         var param = 'nomUsuari=' + nomU + '&nomReceptor=' + nomR + '&missatge=' + missatge;
         var asynchronous = true;
-
 
         ajax.open(method, url, asynchronous);
 
