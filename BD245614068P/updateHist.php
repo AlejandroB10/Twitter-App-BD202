@@ -17,5 +17,5 @@
     $sql = "UPDATE historia SET privacitat = '$privacidad' WHERE idHistoria = '$id'";
     consultar("localhost", "root", "", $sql);
 
-    header("Location: ../BD204305407Z/showPubli.php?idHistorias='$id'");
+    header("Location: ../BD204305407Z/showPubli.php?idHistorias=$id");
 ?>
