@@ -54,10 +54,7 @@
                         JOIN USUARI ON PUBLICACIO.nomUsuari = '$user' and USUARI.nomUsuari = PUBLICACIO.nomUsuari ORDER BY dataPub DESC";             
                 $result_publicacio = consultar("localhost", "root", "", $publi_query);
 
-                //SELECT PARA MOSTRAR LOS COMENTARIOS
-                $res_query = "SELECT missatgeRes, RESPOSTA.nomUsuari FROM RESPOSTA 
-                        JOIN PUBLICACIO ON PUBLICACIO.idPublicacio = RESPOSTA.idPublicacio ORDER BY dataRes DESC";             
-                $result_res = consultar("localhost", "root", "", $res_query);
+                
 
 
                 while ($fila = mysqli_fetch_array($result_publicacio)) : ?>
@@ -70,7 +67,12 @@
                             <h2 class="text-gray-800 text-lg mb-1 font-semibold"><?= $fila['titlePub'] ?></h2>
                             <p class="text-gray-600 text-sm"><?= $fila['textPub'] ?></p>
                             <!-- COMENTARIOS ESCRITOS -->
-                            <?php while ($f = mysqli_fetch_array($result_res)) : ?>
+                            <?php
+                            //SELECT PARA MOSTRAR LOS COMENTARIOS
+                            $idPub = $fila['idPublicacio'];
+                            $res_query = "SELECT * FROM resposta WHERE idPublicacio = '$idPub'";             
+                            $result_res = consultar("localhost", "root", "", $res_query);
+                             while ($f = mysqli_fetch_array($result_res)) : ?>
                                 <div>
                                         <a href="#" class="text-base font-semibold text-indigo-500"><?= $f['nomUsuari'] ?></a>
                                     </div>
@@ -94,7 +96,7 @@
                                     <a href="#" class="text-base font-medium text-gray-500" id="retuit">
                                     <lord-icon src="https://cdn.lordicon.com/akuwjdzh.json" trigger="hover" style="width:22px;height:22px"></lord-icon>
                                         <div id = "retweet">
-                                            <form method="post" action="insertPublicacion.php">
+                                            <form method="post" action="BD243216941X/insertPublicacion.php">
                                                 <input type="submit" name = "Retweet" value = "Retweet" >
                                             </form>
                                         </div>
@@ -107,7 +109,7 @@
                             <!-- -------------------------------------------------------------------------------------------------------------------- -->
                             <hr class="mb-6 mt-2">
                             <div id="comentaris">
-                                <form action="insertComent.php" method="get">
+                                <form method="POST" action="BD243216941X/insertComent.php?id=<?=$fila['idPublicacio']?>" >
                                     Comentario:<input type="text" name="missatge" placeholder="Comentario" class="pl-4 focus mt-1 block w-full border-none bg-gray-100 h-8 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
                                     <!-- mirar de esconder el boton submit -->
                                     <input type="submit" name="insert">
