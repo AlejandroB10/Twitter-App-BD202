@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!-- <!DOCTYPE html>
 <html lang="en">
 
 <head>
@@ -26,4 +26,6 @@
     </footer>
 </body>
 
-</html>
+</html> -->
+
+<?php header("Location: BD245614068P/publicacio.php"); ?>

@@ -26,7 +26,7 @@
                         <a href="#" class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Notificaciones</a>
                     </li>
                     <li>
-                        <a href="BD204305407Z/profile.php" class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Perfil</a>
+                        <a href="../BD204305407Z/profile.php" class="block py-2 pr-4 pl-3 text-gray-700 rounded hover:bg-gray-100 md:hover:bg-transparent md:hover:text-blue-700 md:p-0">Perfil</a>
                     </li>
                 </ul>
             </div>
