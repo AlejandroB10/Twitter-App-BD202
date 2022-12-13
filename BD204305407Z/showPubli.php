@@ -1,5 +1,5 @@
 <?php
-include('../conexion.php'); 
+include('../conexion.php');
 $idHistoria = $_GET['idHistorias'];
 ?>
 <!DOCTYPE html>
@@ -31,7 +31,7 @@ $idHistoria = $_GET['idHistorias'];
                             </lord-icon>
                         </div>
                     </a>
-                    <a href="../BD245614068P/editarHist.php?id=<?= $idHistoria?>">
+                    <a href="../BD245614068P/editarHist.php?id=<?= $idHistoria ?>">
                         <div>
                             <lord-icon src="https://cdn.lordicon.com/wloilxuq.json" trigger="hover"
                                 style="width:40px;height:40px">
@@ -39,11 +39,11 @@ $idHistoria = $_GET['idHistorias'];
                             <span class="text-center text-xs block">Editar</span>
                         </div>
                     </a>
-                    <a href="../BD245614068P/deleteHist.php?id=<?= $idHistoria?>">
+                    <a href="../BD245614068P/deleteHist.php?id=<?= $idHistoria ?>">
                         <div>
-                        <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="hover" 
-                            style="width:40px;height:40px">
-                        </lord-icon>
+                            <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="hover"
+                                style="width:40px;height:40px">
+                            </lord-icon>
                             <span class="text-center text-xs block">Borrar</span>
                         </div>
                     </a>
@@ -66,12 +66,18 @@ $idHistoria = $_GET['idHistorias'];
                         </div>
                     </div>
                     <?php } ?>
-                    <!-- <div class="text-center mt-2">
-                        <h3 class="text-2xl text-slate-700 font-bold leading-normal mb-1" id="nom_user"> DEHDUWEGDEWIB</h3>
-                        <div class="flex flex-row justify-center items-center">
-                            <p class="font-light leading-relaxed text-slate-600 mb-4" id="desc_user"> DWEDHUEWDUWDGDEUDYUWEGDYEWYWEIDEWIDYEWDBEUBDEWBY</p>
-                        </div>
-                    </div> -->
+                </div>
+                <!-- Creamos boton crear publicaciones -->
+                <div class="flex justify-center">
+                    <a href="../BD245614068P/insertPubHis.php?id=<?= $idHistoria ?>">
+                        <span
+                            class="block flex items-center justify-center font-semibold w-40 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
+                            Crear publicación
+                            <lord-icon src="https://cdn.lordicon.com/nocovwne.json" trigger="hover"
+                                style="width:25px;height:25px">
+                            </lord-icon>
+                        </span>
+                    </a>
                 </div>
                 <div class="grid items-center justify-center">
 
@@ -91,12 +97,12 @@ $idHistoria = $_GET['idHistorias'];
                             $result_img = consultar("localhost", "root", "", $user_query_img_profile);
                             $reg_img = mysqli_fetch_array($result_img);
                             if (!empty($reg_img['img_profile'])) {
-                            ?>
+                        ?>
                         <img class="w-20 h-20 flex items-center rounded-full" src=<?= $reg_img['img_profile'] ?>
                         alt="user avatar" height="220" width="220" loading="lazy">
                         <?php
                             } else {
-                            ?>
+                        ?>
 
                         <img class="w-20 h-20 flex items-center rounded-full" src="../img/profile_picture_default.png"
                             alt="user avatar" height="220" width="220" loading="lazy">

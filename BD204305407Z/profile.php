@@ -166,9 +166,10 @@ $user_data = [
                             <div class="grid grid-cols-3 gap-4 mt-4">
                                 <div class="col-span-2 flex items-center justify-start">
                                     <?php
-                                    if ($fila['nomUsuari'] == $user) { ?>
+                        if ($fila['nomUsuari'] == $user) { ?>
 
-                                    <a href="../BD245614068P/editarPub.php?id=<?= $fila['idPublicacio'] ?>" class="mr-2">
+                                    <a href="../BD245614068P/editarPub.php?id=<?= $fila['idPublicacio'] ?>"
+                                        class="mr-2">
                                         <span
                                             class="block flex items-center justify-center font-semibold w-28 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
                                             Editar
@@ -205,9 +206,34 @@ $user_data = [
                                 </div>
                             </div>
                             <hr class="mb-6 mt-2">
+                            <p class="text-sm font-semibold">Comentarios: </p>
+                            <!-- COMENTARIOS ESCRITOS -->
+                            <?php
+                        //SELECT PARA MOSTRAR LOS COMENTARIOS
+                        $idPub = $fila['idPublicacio'];
+                        $res_query = "SELECT * FROM resposta WHERE idPublicacio = '$idPub'";
+                        $result_res = consultar("localhost", "root", "", $res_query);
+                        while ($f = mysqli_fetch_array($result_res)): ?>
+
+                            <div style="margin-top: 5px;" class="mt-0 flex items-center justify-start">
+                                <p class="text-gray-600 text-sm">
+                                    <span class="font-semibold">
+                                        <?= $f['nomUsuari'] ?>:
+                                    </span>
+                                    <?= $f['missatgeRes'] ?><span class="block text-sm font-semibold text-indigo-500">
+                                            <?php echo date_format(date_create($f['dataRes']), "d-m-Y"); ?>
+                                        </span>
+                                </p>
+                            </div>
+                            <?php endwhile ?>
                             <div id="comentaris">
-                                <input type="text" name="comentari" placeholder="Comentario"
-                                    class="pl-4 focus mt-1 block w-full border-none bg-gray-100 h-8 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
+                                <form method="POST"
+                                    action="../BD243216941X/insertComent.php?id=<?= $fila['idPublicacio'] ?>">
+                                    <input type="text" name="missatge" placeholder="Comentario"
+                                        class="pl-4 focus mt-1 block w-full border-none bg-gray-100 h-8 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
+                                    <!-- mirar de esconder el boton submit -->
+                                    <input type="submit" value="">
+                                </form>
                             </div>
                         </div>
                     </div>
@@ -269,7 +295,7 @@ $user_data = [
                 </div>
 
                 <!-- Compartir  -->
-                <div style="display: none;" id="share" class="grid items-center justify-center mt-16" id="publications">
+                <div style="display: none;" id="share" class="items-center justify-center mt-16" id="publications">
                     <?php
                     $publi_query = "SELECT idPublicacio, titlePub, textPub, usuari.nomUsuari, usuari.img_profile, dataPub FROM publicacio 
                         JOIN usuari ON publicacio.nomUsuari = '$user' and usuari.nomUsuari = publicacio.nomUsuari ORDER BY dataPub DESC";

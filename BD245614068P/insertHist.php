@@ -9,5 +9,5 @@
 
     $sql = "INSERT INTO historia (titleHist, textHist, privacitat, nomUsuari) VALUES ('$titulo', '$texto', '$privacidad', '$user')";
     consultar("localhost", "root", "", $sql);
-    header("Location: ../BD204305407Z/profile.php");
+    header("Location: ../BD204305407Z/showPubli.php");
 ?>
