@@ -98,8 +98,9 @@
                     $('#passw').addClass("border-2 border-red-500");
                 } else {
                     console.log(JSON.parse(data));
+                    alertify.success('Has iniciado sesion correctamente '+JSON.parse(data).user );
                     //alert('Has iniciado sesion correctamente '+JSON.parse(data).user );
-                    location.href = 'profile.php';
+                    location.href = '../home.php';
                 }
             }
         );

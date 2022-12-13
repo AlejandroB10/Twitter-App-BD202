@@ -6,10 +6,47 @@ BEGIN
 	DECLARE EXIT HANDLER FOR 1062 RETURN FALSE;#Si el usuario ya existe devolvera false
     
     #Introducimos el usuario
-    INSERT INTO usuari(nomUsuari, contrasenya)
+    INSERT INTO usuari(nomUsuari, contrasenya, img_profile)
     VALUES(
-    	username, pass
+    	username, pass, '../img/profile_picture_default.png'
     );
     RETURN TRUE;
-END
-//
+END//;
+
+DELIMITER //
+CREATE PROCEDURE modifyUser(IN username varchar(25), IN description varchar(200), IN pass varchar(25))
+BEGIN
+UPDATE usuari SET usuari.descripcio = description, usuari.contrasenya = pass WHERE usuari.nomUsuari = username;
+END//;
+
+DELIMITER //
+CREATE PROCEDURE modifyUserImgProfile(IN username varchar(25), IN img_profile VARCHAR(255))
+BEGIN
+    UPDATE usuari SET img_profile = img_profile WHERE nomUsuari = username;
+END//;
+
+DELIMITER //
+CREATE TRIGGER notificar_historia
+AFTER INSERT ON historia FOR EACH ROW
+BEGIN
+DECLARE nomUsuariSeguido VARCHAR(25);
+DECLARE nomUsuariSeguin VARCHAR(25);
+DECLARE var_final INTEGER DEFAULT 0;
+DECLARE cursor1 CURSOR FOR SELECT nomUsuariSeguidor, nomUsuariSeguint FROM follow WHERE nomUsuariSeguint = NEW.nomUsuari;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET var_final = 1;
+
+  OPEN cursor1;
+    bucle: LOOP
+
+        FETCH cursor1 INTO nomUsuariSeguido, nomUsuariSeguin;
+        IF var_final = 1 THEN
+        LEAVE bucle;
+        END IF;
+
+        INSERT INTO missatge (missatge, nomUsuariEmi, nomUsuariRec) 
+        VALUES
+        ('Hola esta es mi historia', nomUsuariSeguin, nomUsuariSeguido);
+
+    END LOOP bucle;
+  CLOSE cursor1;
+END//;

@@ -19,8 +19,6 @@ if (!empty($_FILES['img_profile'])) {
         $name_file = $_FILES['img_profile']['name'][0];
         $filename = uniqid(mt_rand(), true) . $ext;
         $fichero_subido = $dir_subida . $filename;
-        echo $fichero_subido;
-
 
         if (move_uploaded_file($_FILES['img_profile']['tmp_name'][0], $fichero_subido)) {
             $sql = "SELECT * FROM usuari WHERE nomUsuari = '$user'";
@@ -36,7 +34,8 @@ if (!empty($_FILES['img_profile'])) {
                 }
             }
             $sql_update_photo = "UPDATE usuari SET img_profile = '$fichero_subido' WHERE nomUsuari = '$user'";
-            echo $sql_update_photo;
+            $sql_update_photo = "CALL modifyUserImgProfile('$user', '$fichero_subido')";
+
             $resultado_insert =  consultar("localhost", "root", "", $sql_update_photo);
         }
     } else {
@@ -45,50 +44,12 @@ if (!empty($_FILES['img_profile'])) {
     }
 }
 
-// // $foto = $_FILES['archivo'];
-// // if (isset($foto)) {
-
-// //     if ($foto['type'] == "image/jpg" or $foto['type'] == "image/png") {
-// //         $nom_encriptat = md5($foto["tmp_name"]);
-// //         $ruta = "../img/" . $nom_encriptat . ".png";
-// //         move_uploaded_file($foto["tmp_name"], $ruta);
-// //     }
-
-// //     $archivo = $_FILES['archivo']['name'];
-// //     $carpeta = $_SERVER['DOCUMEN_ROOT'] . '/';
-
-// //     if (move_uploaded_file($_FILES['archivo']['tmp_name'], $carpeta . $archivo)) {
-
-// //     } else {
-
-// //     }
-// // }
-// // $ubicacionTemporal = $_FILES["imagen"]["tmp_name"];
-// // $nombreArchivo = $_FILES["imagen"]["name"];
-// // $extension = pathinfo($nombreArchivo, PATHINFO_EXTENSION);
-
-
-// //Recibimos los datos de la imagen
-// $nom_img = $_FILES['archivo']['name'];
-// $tip_img = $_FILES['archivo']['type'];
-// $tam_img = $_FILES['archivo']['size'];
-
-// // //Carpeta destino
-// $nom_encriptat = md5($nom_img);
-// $finish_route = "../" . $nom_encriptat . ".png";
-
-// move_uploaded_file($_FILES['archivo']['tmp_name'], $finish_route);
-// //     // Renombrar archivo
-// //     $nuevoNombre = sprintf($_SERVER['DOCUMEN_ROOT'] . "/img/%s.%s", uniqid(), $extension);
-// //     // Mover del temporal al directorio actual
-// // move_uploaded_file($ubicacionTemporal, $nuevoNombre);
-
-
 $user = $_POST['user'];
 $description = $_POST['description'];
 $password = $_POST['password'];
 
-$update_user = "UPDATE usuari SET usuari.descripcio = '$description', usuari.contrasenya = '$password' WHERE usuari.nomUsuari = '$user'";
+// $update_user = "UPDATE usuari SET usuari.descripcio = '$description', usuari.contrasenya = '$password' WHERE usuari.nomUsuari = '$user'";
+$update_user = "CALL modifyUser('$user', '$description', '$password')";
 
 consultar("localhost", "root", "", $update_user);
 

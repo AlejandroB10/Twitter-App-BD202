@@ -83,12 +83,13 @@
             alertify.error("Rellene el campo de contraseña", 3);
             return;
         }
+
         $.post('userRegister.php', {
                 user: user,
                 password: password
             },
             function(data) {
-
+                console.log(data);
                 const value = parseInt(JSON.parse(data)["0"]);
                 console.log(value);
                 if (value === 0) {
@@ -105,13 +106,8 @@
                                 $('#user_name').addClass("border-2 border-red-500");
                                 $('#passw').addClass("border-2 border-red-500");
                             } else {
-                                var alert = alertify.alert('Atención', 'Usuario creado correctamente');
-                                alert.set('closable', false);
-                                alert.set('movable', false);
-                                alert.set('onok', (closeEvent) => {
-                                    location = "profile.php";
-                                    return false;
-                                })
+                                alertify.success('Has iniciado sesion correctamente '+JSON.parse(data).user );
+                                location.href="../home.php";
                             }
 
                         }

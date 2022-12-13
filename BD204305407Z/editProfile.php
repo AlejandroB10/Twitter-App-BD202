@@ -150,7 +150,7 @@ $user_data = ['usuari' => $reg['nomUsuari'], 'descripcio' => $reg['descripcio'],
             cache: false,
             processData: false,
             success: function (msg) {
-                alert('Se ha actualizado correctamente');
+                // alert('Se ha actualizado correctamente');
                 location.href = 'profile.php';
             }
         });

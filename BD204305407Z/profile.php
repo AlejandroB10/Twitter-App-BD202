@@ -134,14 +134,15 @@ $user_data = [
                 </div>
 
                 <!-- Publicaciones -->
-                <div class="grid items-center justify-center mt-16" id="publications">
+                <div class=" items-center justify-center mt-16" id="publications">
                     <?php
                     $publi_query = "SELECT idPublicacio, titlePub, textPub, usuari.nomUsuari, usuari.img_profile, dataPub FROM publicacio 
                         JOIN usuari ON publicacio.nomUsuari = '$user' and usuari.nomUsuari = publicacio.nomUsuari ORDER BY dataPub DESC";
                     $result_publi = consultar("localhost", "root", "", $publi_query);
                     while ($fila = mysqli_fetch_array($result_publi)): ?>
 
-                    <div class="p-6 bg-white shadow-lg flex justify-start rounded-lg my-8 sm:flex sm:space-x-8 sm:p-8">
+                    <div
+                        class="p-6 bg-white shadow-lg flex justify-start rounded-lg my-8 sm:flex sm:space-x-8 sm:p-8 w-full">
 
                         <?php
                         if (!empty($fila['img_profile'])) { ?>
@@ -154,7 +155,7 @@ $user_data = [
                             alt="user avatar" height="220" width="220" loading="lazy">
                         <?php } ?>
 
-                        <div class="space-y-4 mt-4 text-center sm:mt-0 sm:text-left w-full">
+                        <div class="space-y-4 mt-4 text-center sm:mt-0 sm:text-left w-10/12">
                             <h2 class="text-gray-800 text-lg mb-1 font-semibold">
                                 <?= $fila['titlePub'] ?>
                             </h2>
@@ -164,11 +165,28 @@ $user_data = [
 
                             <div class="grid grid-cols-3 gap-4 mt-4">
                                 <div class="col-span-2 flex items-center justify-start">
-                                    <!-- <a href="#" class="text-base font-medium text-gray-500 mr-4" id="comment">
-                                        <lord-icon src="https://cdn.lordicon.com/hpivxauj.json" trigger="hover"
-                                            style="width:22x;height:22px">
-                                        </lord-icon>
-                                    </a> -->
+                                    <?php
+                                    if ($fila['nomUsuari'] == $user) { ?>
+
+                                    <a href="../BD245614068P/editarPub.php?id=<?= $fila['idPublicacio'] ?>" class="mr-2">
+                                        <span
+                                            class="block flex items-center justify-center font-semibold w-28 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
+                                            Editar
+                                            <lord-icon src="https://cdn.lordicon.com/wloilxuq.json" trigger="hover"
+                                                class="ml-2" style="width:30px;height:30px;color: rgb(148 163 184);">
+                                            </lord-icon>
+                                        </span>
+                                    </a>
+                                    <a href="../BD245614068P/deletePub.php?id=<?= $fila['idPublicacio'] ?>">
+                                        <span
+                                            class="block flex items-center justify-center font-semibold w-28 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
+                                            Borrar
+                                            <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="hover"
+                                                style="width:28px;height:28px">
+                                            </lord-icon>
+                                        </span>
+                                    </a>
+                                    <?php } else { ?>
                                     <a href="#">
                                         <span
                                             class="block flex items-center justify-center font-semibold w-32 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
@@ -178,9 +196,10 @@ $user_data = [
                                             </lord-icon>
                                         </span>
                                     </a>
+                                    <?php } ?>
                                 </div>
                                 <div class="flex justify-end">
-                                    <a href="#" class="text-base font-semibold text-indigo-500">
+                                    <a class="text-base font-semibold text-indigo-500">
                                         <?= $fila['nomUsuari'] ?>
                                     </a>
                                 </div>
@@ -203,7 +222,7 @@ $user_data = [
                         <button
                             class="group h-8 w-48 px-4 mb-6 border-2 border-gray-300 rounded-full transition duration-300 hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100">
 
-                            <a href="#">
+                            <a href="../BD245614068P/crearHist.php">
                                 <span
                                     class="block flex items-center justify-center font-semibold tracking-wide text-gray-700 text-sm transition duration-300 group-hover:text-blue-600 sm:text-base">
                                     <lord-icon src="https://cdn.lordicon.com/ifqmqwui.json" trigger="hover"
@@ -216,7 +235,7 @@ $user_data = [
                     </div>
                     <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
                         <?php
-                        $history_query = "SELECT * FROM historia";
+                        $history_query = "SELECT * FROM historia WHERE historia.nomUsuari = '$user'";
                         $result_history = consultar("localhost", "root", "", $history_query);
                         while ($fila = mysqli_fetch_array($result_history)): ?>
                         <a href="showPubli.php?idHistorias=<?= $fila['idHistoria'] ?>">
@@ -273,13 +292,13 @@ $user_data = [
                             alt="user avatar" height="220" width="220" loading="lazy">
                             <?php
                         } else {
-                        ?>
+                            ?>
                             <img class="w-20 h-20 flex items-center rounded-full"
                                 src="../img/profile_picture_default.png" alt="user avatar" height="220" width="220"
                                 loading="lazy">
                             <?php } ?>
 
-                            <div class="space-y-4 mt-4 text-center sm:mt-0 sm:text-left w-full">
+                            <div class="space-y-4 mt-4 text-center sm:mt-0 sm:text-left w-10/12">
                                 <h2 class="text-gray-800 text-lg mb-1 font-semibold">
                                     <?= $fila['titlePub'] ?>
                                 </h2>

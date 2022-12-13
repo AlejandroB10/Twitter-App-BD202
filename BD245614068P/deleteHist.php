@@ -5,5 +5,5 @@
 
     $sql = "DELETE FROM historia WHERE idHistoria = '$id'";
     consultar("localhost", "root", "", $sql);
-    header("Location: publicacio.php");
+    header("Location: ../BD204305407Z/profile.php");
 ?>
