@@ -11,9 +11,13 @@ $usuarios_query = "SELECT nomUsuari FROM usuari WHERE nomUsuari != '" . $nomUsua
 
 $result_usuarios = consultar("localhost", "root", "", $usuarios_query);
 
+
+
 $chats_query = "
 
-SELECT tt.who, missatge, dataMissatge 
+SELECT who,missatge,dataMissatge,usuari.img_profile FROM usuari 
+INNER JOIN(
+SELECT tt.who, missatge, dataMissatge
 FROM missatge 
 INNER JOIN (
     SELECT  t.who, MAX(idMissatge) as max_id
@@ -25,6 +29,8 @@ INNER JOIN (
     GROUP BY who
 ) as tt
 ON idMissatge = tt.max_id
+) as ttt
+ON who = usuari.nomUsuari
 ORDER BY dataMissatge DESC;
 
 ";
@@ -48,13 +54,15 @@ $result_contactonuevo = consultar("localhost", "root", "", $contactonuevo_query)
 
 
 
-function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
+function addcontacto($who, $dataMissatge, $missatge, $nomUsuari, $img_profile)
 {
+
+
 
 ?>
     <div id="<?= $who ?>" onclick=contactopulsado1(<?php echo json_encode($who) ?>,<?php echo json_encode($nomUsuari) ?>) class="px-3 flex items-center bg-grey-light cursor-pointer">
         <div>
-            <img class="h-12 w-12 rounded-full" src="https://darrenjameseeley.files.wordpress.com/2014/09/expendables3.jpeg" />
+            <img class="h-12 w-12 rounded-full" src="../img/<?=$img_profile?>" />
         </div>
         <div class="ml-4 flex-1 border-b border-grey-lighter py-4">
             <div class="flex items-bottom justify-between">
@@ -147,15 +155,23 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
 
                                     $nomNou = $_POST["inputNombre"];
 
+
+                                    $imagen_perfil = "SELECT img_profile FROM usuari WHERE nomUsuari = '" . $nomNou . "';";
+
+                                    $result_imagen_perfil = consultar("localhost", "root", "", $imagen_perfil);
+
+                                    $imagen = mysqli_fetch_array($result_imagen_perfil);
+
+
                                     if (in_array($nomNou, $personas_desconicidas)) {
 
-                                        addcontacto($nomNou, "?", "*** NO HAY MENSAJES ***", $nomUsuari);
+                                        addcontacto($nomNou, "?", "*** NO HAY MENSAJES ***", $nomUsuari,$imagen['img_profile']);
                                     }
                                 }
 
                                 while ($reg = mysqli_fetch_array($result_chats)) {
 
-                                    addcontacto($reg['who'], $reg['dataMissatge'], $reg['missatge'], $nomUsuari);
+                                    addcontacto($reg['who'], $reg['dataMissatge'], $reg['missatge'], $nomUsuari,$reg['img_profile']);
                                 }
 
                                 ?>
@@ -312,7 +328,6 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
         }
 
     }
-
 </script>
 
 <script>
@@ -336,7 +351,7 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
         ajax.onreadystatechange = function() {
 
             if (this.readyState == 4 && this.status == 200) {
-               
+
                 contactopulsado1(nomR, nomU)
             }
 
