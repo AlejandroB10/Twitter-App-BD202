@@ -60,9 +60,9 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari, $img_profile)
 
 
 ?>
-    <div id="<?= $who ?>" onclick=contactopulsado1(<?php echo json_encode($who) ?>,<?php echo json_encode($nomUsuari) ?>) class="px-3 flex items-center bg-grey-light cursor-pointer">
+    <div id="<?= $who ?>" onclick=contactopulsado1(<?php echo json_encode($who) ?>,<?php echo json_encode($nomUsuari) ?>,<?php echo json_encode($img_profile) ?>) class="px-3 flex items-center bg-grey-light cursor-pointer">
         <div>
-            <img class="h-12 w-12 rounded-full" src="../img/<?=$img_profile?>" />
+            <img class="h-12 w-12 rounded-full" src="../img/<?= $img_profile ?>" />
         </div>
         <div class="ml-4 flex-1 border-b border-grey-lighter py-4">
             <div class="flex items-bottom justify-between">
@@ -165,13 +165,13 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari, $img_profile)
 
                                     if (in_array($nomNou, $personas_desconicidas)) {
 
-                                        addcontacto($nomNou, "?", "*** NO HAY MENSAJES ***", $nomUsuari,$imagen['img_profile']);
+                                        addcontacto($nomNou, "?", "*** NO HAY MENSAJES ***", $nomUsuari, $imagen['img_profile']);
                                     }
                                 }
 
                                 while ($reg = mysqli_fetch_array($result_chats)) {
 
-                                    addcontacto($reg['who'], $reg['dataMissatge'], $reg['missatge'], $nomUsuari,$reg['img_profile']);
+                                    addcontacto($reg['who'], $reg['dataMissatge'], $reg['missatge'], $nomUsuari, $reg['img_profile']);
                                 }
 
                                 ?>
@@ -199,7 +199,7 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari, $img_profile)
 
 
 <script>
-    function contactopulsado1(name, nomU) {
+    function contactopulsado1(name, nomU, img_profile) {
 
         //call ajax
         var ajax = new XMLHttpRequest();
@@ -231,7 +231,7 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari, $img_profile)
                 var html = `  <div class="py-2 px-3 bg-grey-lighter flex flex-row justify-between items-center">
                                 <div class="flex items-center">
                                     <div>
-                                        <img class="w-10 h-10 rounded-full" src="https://darrenjameseeley.files.wordpress.com/2014/09/expendables3.jpeg" />
+                                        <img class="w-10 h-10 rounded-full" src="../img/` + img_profile + `" />
                                     </div>
                                     <div class="ml-4">
                                         <p class="text-grey-darkest">
@@ -253,7 +253,7 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari, $img_profile)
                                         </div>
                                     </div>
 
-                `
+                `;
 
                 for (var a = 0; a < data.length; a++) {
 
@@ -261,42 +261,50 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari, $img_profile)
                     var missatge = data[a].missatge;
                     var dataM = data[a].dataMissatge;
 
+                    var color;
+
+                    var estilo;
+                    var esHistoria;
 
                     if (nomEmissor == name) {
 
-                        html += `
+                        estilo = "flex mb-2";
+                        color = "#F2F2F2";
+                    
+                    } else {
 
-                        <div class="flex mb-2">
-                            <div class="rounded py-2 px-3" style="background-color: #F2F2F2">
+                        estilo = "flex justify-end mb-2";
+                        color = "#E2F7CB";
+
+                    }
+
+
+                   esHistoria = missatge.slice(0,5);
+              
+
+                    if(esHistoria=="*****"){
+
+                        color = "#FFC96C";
+
+                    }
+
+                    html += `
+
+                        <div class="` + estilo + `">
+                            <div class="rounded py-2 px-3" style="background-color: ` + color + `">
                                 <p class="text-sm mt-1">
-                                      ` + missatge + `
+                                    ` + missatge + `
                                 </p>
                                 <p class="text-right text-xs text-grey-dark mt-1">
-                                      ` + dataM + `
+                                    ` + dataM + `
                                 </p>
                             </div>
                         </div>
-                        `
-
-                    } else {
+                        `;
 
 
-                        html += `
-                                    <div class="flex justify-end mb-2">
-                                        <div class="rounded py-2 px-3" style="background-color: #E2F7CB">
-                                            <p class="text-sm mt-1">
-                                            ` + missatge + `
-                                            </p>
-                                            <p class="text-right text-xs text-grey-dark mt-1">
-                                              ` + dataM + `
-                                            </p>
-                                        </div>
-                                    </div>
-
-                               `
 
 
-                    }
                 }
                 html += `
 
