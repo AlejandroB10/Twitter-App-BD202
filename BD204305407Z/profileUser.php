@@ -256,7 +256,7 @@ $user_data = [
                     <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
 
                         <?php
-                        $history_query = "SELECT * FROM historia WHERE historia.nomUsuari = '$user_profile'";
+                        $history_query = "SELECT * FROM historia WHERE historia.nomUsuari = '$user_profile' AND (historia.privacitat = 'Publica' OR EXISTS (SELECT * FROM follow WHERE follow.nomUsuariSeguidor = '$user' AND follow.nomUsuariSeguint = '$user_profile'))";
                         $result_history = consultar("localhost", "root", "", $history_query);
                         while ($fila = mysqli_fetch_array($result_history)): ?>
                         <a href="showPubli.php?idHistorias=<?= $fila['idHistoria'] ?>">
