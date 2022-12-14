@@ -180,21 +180,25 @@ function insertarPub()
                     </div>
                 </div>
                 <?php
-                    } else { ?>
+                    } else { 
+                        $query_share = "SELECT publiOri.idPublicacio, publi.nomUsuari, publi.titlePub, publi.textPub, usuari.img_profile, publiOri.nomUsuari AS nomShare
+                        FROM publicacio publi JOIN publicacio publiOri ON publi.idPublicacio = publiOri.idPubliOri 
+                        JOIN usuari ON publi.nomUsuari = usuari.nomUsuari ORDER BY publiOri.dataPub DESC";
+                        $result_share = consultar("localhost", "root", "", $query_share);
+                        while ($fila_share = mysqli_fetch_array($result_share)){?>
                 <!-- Publicacio retuiteada -->
-                <!-- HAY QUE HACER UN SELECT QUE PRIMERO COJA LA FILA DEL RETUITEADO Y DESPUES ACCEDER A LA PUBLICACION DE CON LA 
-            IDPUBLIORI Y PINTAR LA INFORMACION  -->
+            
                 <div class="grid-cols-2 gap-2">
                     <div class="mt-4 col-span-2 text-center sm:mt-0 sm:text-left w-full">
                         <p class="text-sm ml-4">Compartido por: <a href="#"
-                                class="text-base font-semibold text-indigo-500">Alex</a></p>
+                                class="text-base font-semibold text-indigo-500"><?= $fila_share['nomShare']?></a></p>
                         <hr class="mt-2 mx-4">
                     </div>
                     <div class="p-6 bg-white shadow-lg flex justify-start rounded-lg my-8 sm:flex sm:space-x-8 sm:p-8">
 
                         <?php
-                        if (!empty($reg_img['img_profile'])) { ?>
-                        <img class="w-20 h-20 flex items-center rounded-full" src=<?= $reg_img['img_profile'] ?>
+                        if (!empty($fila_share['img_profile'])) { ?>
+                        <img class="w-20 h-20 flex items-center rounded-full" src=<?= $fila_share['img_profile'] ?>
                         alt="user avatar" height="220" width="220" loading="lazy">
                         <?php
                         } else {
@@ -205,53 +209,35 @@ function insertarPub()
 
                         <div class="space-y-4 mt-4 text-center sm:mt-0 sm:text-left w-10/12">
                             <h2 class="text-gray-800 text-lg mb-1 font-semibold">
-                                <?= $fila['titlePub'] ?>
+                                <?= $fila_share['titlePub'] ?>
                             </h2>
                             <p class="text-gray-600 text-sm">
-                                <?= $fila['textPub'] ?>
+                                <?= $fila_share['textPub'] ?>
                             </p>
 
                             <div class="grid grid-cols-3 gap-4 mt-4">
                                 <div class="col-span-2 flex items-center justify-start">
                                     <?php
-                        if ($fila['nomUsuari'] == $user) { ?>
-
-                                    <a href="../BD245614068P/editarPub.php?id=<?= $fila['idPublicacio'] ?>"
+                        if ($fila_share['nomShare'] == $user) { ?>
+                                    <!-- Eliminar una publicacion -->
+                                    <a href="../BD245614068P/deletePub.php?id=<?= $fila_share['idPublicacio'] ?>"
                                         class="mr-2">
                                         <span
-                                            class="block flex items-center justify-center font-semibold w-28 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
-                                            Editar
-                                            <lord-icon src="https://cdn.lordicon.com/wloilxuq.json" trigger="hover"
-                                                class="ml-2" style="width:30px;height:30px;color: rgb(148 163 184);">
-                                            </lord-icon>
-                                        </span>
-                                    </a>
-                                    <a href="../BD245614068P/deletePub.php?id=<?= $fila['idPublicacio'] ?>">
-                                        <span
-                                            class="block flex items-center justify-center font-semibold w-28 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
-                                            Borrar
-                                            <lord-icon src="https://cdn.lordicon.com/gsqxdxog.json" trigger="hover"
-                                                style="width:28px;height:28px">
-                                            </lord-icon>
-                                        </span>
-                                    </a>
-                                    <?php } else { ?>
-                                    <a
-                                        href="../BD243216941X/insertPublicacion.php?idPublicacio=<?= $fila['idPublicacio'] ?>">
-                                        <span
-                                            class="block flex items-center justify-center font-semibold w-32 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
-                                            Compartir
+                                            class="block flex items-center justify-center font-semibold w-48 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
+                                            Dejar de compartir
                                             <lord-icon src="https://cdn.lordicon.com/akuwjdzh.json" trigger="hover"
-                                                class="ml-2" style="width:22px;height:22px;color: rgb(148 163 184);">
-                                            </lord-icon>
-
+                                            class="ml-2" style="width:22px;height:22px;color: rgb(148 163 184);">
+                                        </lord-icon>
                                         </span>
                                     </a>
+                                    
+                                    <?php } else { ?>
+                                    
                                     <?php } ?>
                                 </div>
                                 <div class="flex justify-end">
                                     <a class="text-base font-semibold text-indigo-500">
-                                        <?= $fila['nomUsuari'] ?>
+                                        <?= $fila_share['nomUsuari'] ?>
                                     </a>
                                 </div>
                             </div>
@@ -260,7 +246,7 @@ function insertarPub()
                             <!-- COMENTARIOS ESCRITOS -->
                             <?php
                         //SELECT PARA MOSTRAR LOS COMENTARIOS
-                        $idPub = $fila['idPublicacio'];
+                        $idPub = $fila_share['idPublicacio'];
                         $res_query = "SELECT * FROM resposta WHERE idPublicacio = '$idPub'";
                         $result_res = consultar("localhost", "root", "", $res_query);
                         while ($f = mysqli_fetch_array($result_res)): ?>
@@ -278,7 +264,7 @@ function insertarPub()
                             <?php endwhile ?>
                             <div id="comentaris">
                                 <form method="POST"
-                                    action="../BD243216941X/insertComent.php?id=<?= $fila['idPublicacio'] ?>">
+                                    action="../BD243216941X/insertComent.php?id=<?= $fila_share['idPublicacio'] ?>">
                                     <input type="text" name="missatge" placeholder="Comentario"
                                         class="pl-4 focus mt-1 block w-full border-none bg-gray-100 h-8 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
                                     <!-- mirar de esconder el boton submit -->
@@ -289,6 +275,7 @@ function insertarPub()
                     </div>
                 </div>
                 <?php }
+                }
                 endwhile;
                 ?>
             </div>

@@ -136,20 +136,22 @@ $user_data = [
                 <!-- Publicaciones -->
                 <div class=" items-center justify-center mt-16" id="publications">
                     <?php
-                    $publi_query = "SELECT idPublicacio, titlePub, textPub, usuari.nomUsuari, usuari.img_profile, dataPub FROM publicacio 
+                    $publi_query = "SELECT idPublicacio, titlePub, textPub, usuari.nomUsuari, usuari.img_profile, dataPub, idPubliOri FROM publicacio 
                         JOIN usuari ON publicacio.nomUsuari = '$user' and usuari.nomUsuari = publicacio.nomUsuari ORDER BY dataPub DESC";
                     $result_publi = consultar("localhost", "root", "", $publi_query);
-                    while ($fila = mysqli_fetch_array($result_publi)): ?>
+                    while ($fila = mysqli_fetch_array($result_publi)):
+                        if (is_null($fila['idPubliOri'])) {
+                    ?>
 
                     <div
                         class="p-6 bg-white shadow-lg flex justify-start rounded-lg my-8 sm:flex sm:space-x-8 sm:p-8 w-full">
 
                         <?php
-                        if (!empty($fila['img_profile'])) { ?>
+                            if (!empty($fila['img_profile'])) { ?>
                         <img class="w-20 h-20 flex items-center rounded-full" src=<?= $fila['img_profile'] ?>
                         alt="user avatar" height="220" width="220" loading="lazy">
                         <?php
-                        } else {
+                            } else {
                         ?>
                         <img class="w-20 h-20 flex items-center rounded-full" src="../img/profile_picture_default.png"
                             alt="user avatar" height="220" width="220" loading="lazy">
@@ -166,7 +168,7 @@ $user_data = [
                             <div class="grid grid-cols-3 gap-4 mt-4">
                                 <div class="col-span-2 flex items-center justify-start">
                                     <?php
-                        if ($fila['nomUsuari'] == $user) { ?>
+                            if ($fila['nomUsuari'] == $user) { ?>
 
                                     <a href="../BD245614068P/editarPub.php?id=<?= $fila['idPublicacio'] ?>"
                                         class="mr-2">
@@ -209,11 +211,11 @@ $user_data = [
                             <p class="text-sm font-semibold">Comentarios: </p>
                             <!-- COMENTARIOS ESCRITOS -->
                             <?php
-                        //SELECT PARA MOSTRAR LOS COMENTARIOS
-                        $idPub = $fila['idPublicacio'];
-                        $res_query = "SELECT * FROM resposta WHERE idPublicacio = '$idPub'";
-                        $result_res = consultar("localhost", "root", "", $res_query);
-                        while ($f = mysqli_fetch_array($result_res)): ?>
+                            //SELECT PARA MOSTRAR LOS COMENTARIOS
+                            $idPub = $fila['idPublicacio'];
+                            $res_query = "SELECT * FROM resposta WHERE idPublicacio = '$idPub'";
+                            $result_res = consultar("localhost", "root", "", $res_query);
+                            while ($f = mysqli_fetch_array($result_res)): ?>
 
                             <div style="margin-top: 5px;" class="mt-0 flex items-center justify-start">
                                 <p class="text-gray-600 text-sm">
@@ -238,6 +240,7 @@ $user_data = [
                         </div>
                     </div>
                     <?php
+                        }
                     endwhile;
                     ?>
                 </div>
@@ -297,28 +300,31 @@ $user_data = [
                 <!-- Compartir  -->
                 <div style="display: none;" id="share" class="items-center justify-center mt-16" id="publications">
                     <?php
-                    $publi_query = "SELECT idPublicacio, titlePub, textPub, usuari.nomUsuari, usuari.img_profile, dataPub FROM publicacio 
-                        JOIN usuari ON publicacio.nomUsuari = '$user' and usuari.nomUsuari = publicacio.nomUsuari ORDER BY dataPub DESC";
-                    $result_publi = consultar("localhost", "root", "", $publi_query);
-                    while ($fila = mysqli_fetch_array($result_publi)): ?>
+                    $query_share = "SELECT publiOri.idPublicacio, publi.nomUsuari, publi.titlePub, publi.textPub, usuari.img_profile, publiOri.nomUsuari AS nomShare
+                    FROM publicacio publi JOIN publicacio publiOri ON publiOri.nomUsuari = '$user' and publi.idPublicacio = publiOri.idPubliOri 
+                    JOIN usuari ON publi.nomUsuari = usuari.nomUsuari ORDER BY publiOri.dataPub DESC";
+                    $result_share = consultar("localhost", "root", "", $query_share);
+                    while ($fila_share = mysqli_fetch_array($result_share)) { ?>
+                    <!-- Publicacio retuiteada -->
 
-                    <div class="grid grid-cols-2 gap-2">
+                    <div class="grid-cols-2 gap-2">
                         <div class="mt-4 col-span-2 text-center sm:mt-0 sm:text-left w-full">
                             <p class="text-sm ml-4">Compartido por: <a href="#"
-                                    class="text-base font-semibold text-indigo-500">Alex</a></p>
+                                    class="text-base font-semibold text-indigo-500">
+                                    <?= $fila_share['nomShare'] ?>
+                                </a></p>
                             <hr class="mt-2 mx-4">
                         </div>
-
                         <div
-                            class="p-6 bg-white shadow-lg flex col-span-2 justify-start rounded-lg mb-8 sm:flex sm:space-x-8 sm:p-8">
+                            class="p-6 bg-white shadow-lg flex justify-start rounded-lg my-8 sm:flex sm:space-x-8 sm:p-8">
 
                             <?php
-                        if (!empty($fila['img_profile'])) { ?>
-                            <img class="w-20 h-20 flex items-center rounded-full" src=<?= $fila['img_profile'] ?>
+                        if (!empty($fila_share['img_profile'])) { ?>
+                            <img class="w-20 h-20 flex items-center rounded-full" src=<?= $fila_share['img_profile'] ?>
                             alt="user avatar" height="220" width="220" loading="lazy">
                             <?php
                         } else {
-                            ?>
+                    ?>
                             <img class="w-20 h-20 flex items-center rounded-full"
                                 src="../img/profile_picture_default.png" alt="user avatar" height="220" width="220"
                                 loading="lazy">
@@ -326,42 +332,74 @@ $user_data = [
 
                             <div class="space-y-4 mt-4 text-center sm:mt-0 sm:text-left w-10/12">
                                 <h2 class="text-gray-800 text-lg mb-1 font-semibold">
-                                    <?= $fila['titlePub'] ?>
+                                    <?= $fila_share['titlePub'] ?>
                                 </h2>
                                 <p class="text-gray-600 text-sm">
-                                    <?= $fila['textPub'] ?>
+                                    <?= $fila_share['textPub'] ?>
                                 </p>
 
                                 <div class="grid grid-cols-3 gap-4 mt-4">
                                     <div class="col-span-2 flex items-center justify-start">
-                                        <a href="#" class="text-base font-medium text-gray-500 mr-4" id="comment">
-                                            <lord-icon src="https://cdn.lordicon.com/hpivxauj.json" trigger="hover"
-                                                style="width:22x;height:22px">
-                                            </lord-icon>
+                                        <?php
+                        if ($fila_share['nomShare'] == $user) { ?>
+                                        <!-- Eliminar una publicacion -->
+                                        <a href="../BD245614068P/deletePub.php?id=<?= $fila_share['idPublicacio'] ?>"
+                                            class="mr-2">
+                                            <span
+                                                class="block flex items-center justify-center font-semibold w-48 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
+                                                Dejar de compartir
+                                                <lord-icon src="https://cdn.lordicon.com/akuwjdzh.json" trigger="hover"
+                                                    class="ml-2"
+                                                    style="width:22px;height:22px;color: rgb(148 163 184);">
+                                                </lord-icon>
+                                            </span>
                                         </a>
-                                        <a href="#" class="text-base font-medium text-gray-500" id="retuit">
-                                            <lord-icon src="https://cdn.lordicon.com/akuwjdzh.json" trigger="hover"
-                                                style="width:22px;height:22px">
-                                            </lord-icon>
-                                        </a>
+
+                                        <?php } else { ?>
+
+                                        <?php } ?>
                                     </div>
                                     <div class="flex justify-end">
-                                        <a href="#" class="text-base font-semibold text-indigo-500">
-                                            <?= $fila['nomUsuari'] ?>
+                                        <a class="text-base font-semibold text-indigo-500">
+                                            <?= $fila_share['nomUsuari'] ?>
                                         </a>
                                     </div>
                                 </div>
                                 <hr class="mb-6 mt-2">
+                                <p class="text-sm font-semibold">Comentarios: </p>
+                                <!-- COMENTARIOS ESCRITOS -->
+                                <?php
+                        //SELECT PARA MOSTRAR LOS COMENTARIOS
+                        $idPub = $fila_share['idPublicacio'];
+                        $res_query = "SELECT * FROM resposta WHERE idPublicacio = '$idPub'";
+                        $result_res = consultar("localhost", "root", "", $res_query);
+                        while ($f = mysqli_fetch_array($result_res)): ?>
+
+                                <div style="margin-top: 5px;" class="mt-0 flex items-center justify-start">
+                                    <p class="text-gray-600 text-sm">
+                                        <span class="font-semibold">
+                                            <?= $f['nomUsuari'] ?>:
+                                        </span>
+                                        <?= $f['missatgeRes'] ?><span
+                                                class="block text-sm font-semibold text-indigo-500">
+                                                <?php echo date_format(date_create($f['dataRes']), "d-m-Y"); ?>
+                                            </span>
+                                    </p>
+                                </div>
+                                <?php endwhile ?>
                                 <div id="comentaris">
-                                    <input type="text" name="comentari" placeholder="Comentario"
-                                        class="pl-4 focus mt-1 block w-full border-none bg-gray-100 h-8 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
+                                    <form method="POST"
+                                        action="../BD243216941X/insertComent.php?id=<?= $fila_share['idPublicacio'] ?>">
+                                        <input type="text" name="missatge" placeholder="Comentario"
+                                            class="pl-4 focus mt-1 block w-full border-none bg-gray-100 h-8 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
+                                        <!-- mirar de esconder el boton submit -->
+                                        <input type="submit" value="">
+                                    </form>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <?php
-                    endwhile;
-                    ?>
+                    <?php } ?>
                 </div>
 
                 <!-- Configuracion -->
