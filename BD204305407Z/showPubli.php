@@ -16,7 +16,11 @@ $idHistoria = $_GET['idHistorias'];
 
 <body>
     <header>
-        <?php include('header.php'); ?>
+        <?php 
+        include('header.php'); 
+        session_start();
+        $user = $_SESSION['user'];
+        ?>
     </header>
     <main>
         <!-- component -->
@@ -69,7 +73,7 @@ $idHistoria = $_GET['idHistorias'];
                 </div>
                 <!-- Creamos boton crear publicaciones -->
                 <div class="flex justify-center">
-                    <a href="../BD245614068P/insertPubHis.php?id=<?= $idHistoria ?>">
+                    <a href="../BD245614068P/crearPubHist.php?id=<?= $idHistoria ?>">
                         <span
                             class="block flex items-center justify-center font-semibold w-40 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
                             Crear publicación
