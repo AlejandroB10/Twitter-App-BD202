@@ -72,6 +72,11 @@ $idHistoria = $_GET['idHistorias'];
                     <?php } ?>
                 </div>
                 <!-- Creamos boton crear publicaciones -->
+                <?php 
+                $owner = "SELECT historia.nomUsuari FROM historia WHERE historia.idHistoria = '$idHistoria'";
+                $owner_result = consultar("localhost", "root", "", $owner);
+                $fila = mysqli_fetch_array($owner_result);
+                if($fila['nomUsuari']==$user){?>
                 <div class="flex justify-center">
                     <a href="../BD245614068P/crearPubHist.php?id=<?= $idHistoria ?>">
                         <span
@@ -83,6 +88,7 @@ $idHistoria = $_GET['idHistorias'];
                         </span>
                     </a>
                 </div>
+                <?php } ?>
                 <div class="grid items-center justify-center">
 
                     <?php
