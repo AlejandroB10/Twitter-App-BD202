@@ -11,9 +11,13 @@ $usuarios_query = "SELECT nomUsuari FROM usuari WHERE nomUsuari != '" . $nomUsua
 
 $result_usuarios = consultar("localhost", "root", "", $usuarios_query);
 
+
+
 $chats_query = "
 
-SELECT tt.who, missatge, dataMissatge 
+SELECT who,missatge,dataMissatge,usuari.img_profile FROM usuari 
+INNER JOIN(
+SELECT tt.who, missatge, dataMissatge
 FROM missatge 
 INNER JOIN (
     SELECT  t.who, MAX(idMissatge) as max_id
@@ -25,6 +29,8 @@ INNER JOIN (
     GROUP BY who
 ) as tt
 ON idMissatge = tt.max_id
+) as ttt
+ON who = usuari.nomUsuari
 ORDER BY dataMissatge DESC;
 
 ";
@@ -48,13 +54,15 @@ $result_contactonuevo = consultar("localhost", "root", "", $contactonuevo_query)
 
 
 
-function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
+function addcontacto($who, $dataMissatge, $missatge, $nomUsuari, $img_profile)
 {
 
+
+
 ?>
-    <div id="<?= $who ?>" onclick=contactopulsado1(<?php echo json_encode($who) ?>,<?php echo json_encode($nomUsuari) ?>) class="px-3 flex items-center bg-grey-light cursor-pointer">
+    <div id="<?= $who ?>" onclick=contactopulsado1(<?php echo json_encode($who) ?>,<?php echo json_encode($nomUsuari) ?>,<?php echo json_encode($img_profile) ?>) class="px-3 flex items-center bg-grey-light cursor-pointer">
         <div>
-            <img class="h-12 w-12 rounded-full" src="https://darrenjameseeley.files.wordpress.com/2014/09/expendables3.jpeg" />
+            <img class="h-12 w-12 rounded-full" src="../img/<?= $img_profile ?>" />
         </div>
         <div class="ml-4 flex-1 border-b border-grey-lighter py-4">
             <div class="flex items-bottom justify-between">
@@ -147,15 +155,23 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
 
                                     $nomNou = $_POST["inputNombre"];
 
+
+                                    $imagen_perfil = "SELECT img_profile FROM usuari WHERE nomUsuari = '" . $nomNou . "';";
+
+                                    $result_imagen_perfil = consultar("localhost", "root", "", $imagen_perfil);
+
+                                    $imagen = mysqli_fetch_array($result_imagen_perfil);
+
+
                                     if (in_array($nomNou, $personas_desconicidas)) {
 
-                                        addcontacto($nomNou, "?", "*** NO HAY MENSAJES ***", $nomUsuari);
+                                        addcontacto($nomNou, "?", "*** NO HAY MENSAJES ***", $nomUsuari, $imagen['img_profile']);
                                     }
                                 }
 
                                 while ($reg = mysqli_fetch_array($result_chats)) {
 
-                                    addcontacto($reg['who'], $reg['dataMissatge'], $reg['missatge'], $nomUsuari);
+                                    addcontacto($reg['who'], $reg['dataMissatge'], $reg['missatge'], $nomUsuari, $reg['img_profile']);
                                 }
 
                                 ?>
@@ -183,7 +199,7 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
 
 
 <script>
-    function contactopulsado1(name, nomU) {
+    function contactopulsado1(name, nomU, img_profile) {
 
         //call ajax
         var ajax = new XMLHttpRequest();
@@ -215,7 +231,7 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
                 var html = `  <div class="py-2 px-3 bg-grey-lighter flex flex-row justify-between items-center">
                                 <div class="flex items-center">
                                     <div>
-                                        <img class="w-10 h-10 rounded-full" src="https://darrenjameseeley.files.wordpress.com/2014/09/expendables3.jpeg" />
+                                        <img class="w-10 h-10 rounded-full" src="../img/` + img_profile + `" />
                                     </div>
                                     <div class="ml-4">
                                         <p class="text-grey-darkest">
@@ -237,7 +253,7 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
                                         </div>
                                     </div>
 
-                `
+                `;
 
                 for (var a = 0; a < data.length; a++) {
 
@@ -245,42 +261,50 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
                     var missatge = data[a].missatge;
                     var dataM = data[a].dataMissatge;
 
+                    var color;
+
+                    var estilo;
+                    var esHistoria;
 
                     if (nomEmissor == name) {
 
-                        html += `
+                        estilo = "flex mb-2";
+                        color = "#F2F2F2";
+                    
+                    } else {
 
-                        <div class="flex mb-2">
-                            <div class="rounded py-2 px-3" style="background-color: #F2F2F2">
+                        estilo = "flex justify-end mb-2";
+                        color = "#E2F7CB";
+
+                    }
+
+
+                   esHistoria = missatge.slice(0,5);
+              
+
+                    if(esHistoria=="*****"){
+
+                        color = "#FFC96C";
+
+                    }
+
+                    html += `
+
+                        <div class="` + estilo + `">
+                            <div class="rounded py-2 px-3" style="background-color: ` + color + `">
                                 <p class="text-sm mt-1">
-                                      ` + missatge + `
+                                    ` + missatge + `
                                 </p>
                                 <p class="text-right text-xs text-grey-dark mt-1">
-                                      ` + dataM + `
+                                    ` + dataM + `
                                 </p>
                             </div>
                         </div>
-                        `
-
-                    } else {
+                        `;
 
 
-                        html += `
-                                    <div class="flex justify-end mb-2">
-                                        <div class="rounded py-2 px-3" style="background-color: #E2F7CB">
-                                            <p class="text-sm mt-1">
-                                            ` + missatge + `
-                                            </p>
-                                            <p class="text-right text-xs text-grey-dark mt-1">
-                                              ` + dataM + `
-                                            </p>
-                                        </div>
-                                    </div>
-
-                               `
 
 
-                    }
                 }
                 html += `
 
@@ -299,7 +323,7 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
                                         <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zM7 9a1 1 0 100-2 1 1 0 000 2zm7-1a1 1 0 11-2 0 1 1 0 012 0zm-.464 5.535a1 1 0 10-1.415-1.414 3 3 0 01-4.242 0 1 1 0 00-1.415 1.414 5 5 0 007.072 0z" clip-rule="evenodd"></path></svg>
                                     </button>
                                     <input id="inputchat"  rows="1" class="block mx-4 p-2.5 w-full text-sm text-gray-900 bg-white rounded-lg border border-gray-300 focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-800 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500" placeholder="Your message..."></textarea>
-                                    <button type="submit" id="botonmissatge" onclick=enviarmissate("` + nomU + `","` + name + `") class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
+                                    <button type="submit" id="botonmissatge" onclick=enviarmissate("` + nomU + `","` + name + `","` + img_profile + `") class="inline-flex justify-center p-2 text-blue-600 rounded-full cursor-pointer hover:bg-blue-100 dark:text-blue-500 dark:hover:bg-gray-600">
                                         <svg class="w-6 h-6 rotate-90" fill="currentColor" viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg"><path d="M10.894 2.553a1 1 0 00-1.788 0l-7 14a1 1 0 001.169 1.409l5-1.429A1 1 0 009 15.571V11a1 1 0 112 0v4.571a1 1 0 00.725.962l5 1.428a1 1 0 001.17-1.408l-7-14z"></path></svg>
                                     </button>
                                 </div>
@@ -312,11 +336,10 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
         }
 
     }
-
 </script>
 
 <script>
-    function enviarmissate(nomU, nomR) {
+    function enviarmissate(nomU, nomR, img_profile) {
 
         var missatge = document.getElementById('inputchat').value;
         //call ajax
@@ -336,8 +359,8 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari)
         ajax.onreadystatechange = function() {
 
             if (this.readyState == 4 && this.status == 200) {
-               
-                contactopulsado1(nomR, nomU)
+
+                contactopulsado1(nomR, nomU, img_profile)
             }
 
         }

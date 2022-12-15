@@ -257,8 +257,10 @@ $user_data = [
                     <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
 
                         <?php
+
                         $history_query = "SELECT * FROM historia JOIN follow ON nomUsuariSeguidor = '$user' and nomUsuariSeguint = '$user_profile' 
                         and nomUsuariSeguint = historia.nomUsuari";
+
                         $result_history = consultar("localhost", "root", "", $history_query);
                         $register_hisotry = mysqli_num_rows($result_history);
                         if ($register_hisotry) {
