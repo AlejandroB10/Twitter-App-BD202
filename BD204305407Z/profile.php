@@ -137,7 +137,7 @@ $user_data = [
                 <div class=" items-center justify-center mt-16" id="publications">
                     <?php
                     $publi_query = "SELECT idPublicacio, titlePub, textPub, usuari.nomUsuari, usuari.img_profile, dataPub, idPubliOri FROM publicacio 
-                        JOIN usuari ON publicacio.nomUsuari = '$user' and usuari.nomUsuari = publicacio.nomUsuari ORDER BY dataPub DESC";
+                        JOIN usuari ON publicacio.nomUsuari = '$user' and usuari.nomUsuari = publicacio.nomUsuari and idHistoria IS NULL ORDER BY dataPub DESC";
                     $result_publi = consultar("localhost", "root", "", $publi_query);
                     while ($fila = mysqli_fetch_array($result_publi)):
                         if (is_null($fila['idPubliOri'])) {
