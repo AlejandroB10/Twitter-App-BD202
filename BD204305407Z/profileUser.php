@@ -197,7 +197,8 @@ $user_data = [
                                         </span>
                                     </a>
                                     <?php } else { ?>
-                                    <a href="../BD243216941X/insertPublicacion.php?idPublicacio=<?= $fila['idPublicacio'] ?>">
+                                    <a
+                                        href="../BD243216941X/insertPublicacion.php?idPublicacio=<?= $fila['idPublicacio'] ?>">
                                         <span
                                             class="block flex items-center justify-center font-semibold w-32 p-1 text-slate-400 border-2 border-slate-400 rounded-full text-sm transition duration-300 group-hover:text-blue-600">
                                             Compartir
@@ -256,16 +257,20 @@ $user_data = [
                     <div class="grid grid-cols-1 gap-8 lg:grid-cols-2">
 
                         <?php
-                        $history_query = "SELECT * FROM historia WHERE historia.nomUsuari = '$user_profile' AND (historia.privacitat = 'Publica' OR EXISTS (SELECT * FROM follow WHERE follow.nomUsuariSeguidor = '$user' AND follow.nomUsuariSeguint = '$user_profile'))";
+
+                        $history_query = "SELECT * FROM historia JOIN follow ON nomUsuariSeguidor = '$user' and nomUsuariSeguint = '$user_profile' 
+                        and nomUsuariSeguint = historia.nomUsuari";
+
                         $result_history = consultar("localhost", "root", "", $history_query);
-                        while ($fila = mysqli_fetch_array($result_history)): ?>
+                        $register_hisotry = mysqli_num_rows($result_history);
+                        if ($register_hisotry) {
+                            while ($fila = mysqli_fetch_array($result_history)) { ?>
                         <a href="showPubli.php?idHistorias=<?= $fila['idHistoria'] ?>">
                             <div class="overflow-hidden rounded-2xl bg-blue-50 p-4 lg:p-6">
                                 <div class="flex items-center text-blue-500">
                                     <p class="text-sm font-bold uppercase">
                                         <?= $fila['privacitat']; ?>
                                     </p>
-
                                     <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4" fill="none"
                                         viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
                                         <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
@@ -284,7 +289,40 @@ $user_data = [
 
                         </a>
 
-                        <?php endwhile;
+                        <?php
+                            }
+                        } else {
+                            $history_query_public = "SELECT * FROM historia WHERE historia.privacitat='Publica' and historia.nomUsuari = '$user_profile'";
+                            $result_history_public = consultar("localhost", "root", "", $history_query_public);
+                            while ($filas = mysqli_fetch_array($result_history_public)) { ?>
+
+                        <a href="showPubli.php?idHistorias=<?= $filas['idHistoria'] ?>">
+                            <div class="overflow-hidden rounded-2xl bg-blue-50 p-4 lg:p-6">
+                                <div class="flex items-center text-blue-500">
+                                    <p class="text-sm font-bold uppercase">
+                                        <?= $filas['privacitat']; ?>
+                                    </p>
+
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="ml-2 h-4 w-4" fill="none"
+                                        viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
+                                        <path stroke-linecap="round" stroke-linejoin="round" d="M9 5l7 7-7 7" />
+                                    </svg>
+                                </div>
+
+                                <h2 class="mt-4 text-xl font-semibold text-slate-800">
+                                    <?= $filas['titleHist']; ?>
+                                </h2>
+
+                                <p class="mt-4 text-lg text-slate-600">
+                                    <?= $filas['textHist']; ?>
+                                </p>
+
+                            </div>
+
+                        </a>
+                        <?php
+                            }
+                        }
                         ?>
                     </div>
                 </div>

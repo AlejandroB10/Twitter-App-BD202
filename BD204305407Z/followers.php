@@ -63,6 +63,7 @@ include('../conexion.php'); ?>
                         $follower_user = "SELECT usuari.img_profile FROM usuari WHERE usuari.nomUsuari = '$follower'";
                         $result_follower_user = consultar("localhost", "root", "", $follower_user);
                         while ($reg = mysqli_fetch_array($result_follower_user)) {
+                            if (isset($user_id)) {
                     ?>
                     <div class="container ">
                         <div
@@ -70,10 +71,36 @@ include('../conexion.php'); ?>
                             <div class="h-24 bg-white"></div>
                             <div class="-mt-20 flex justify-center">
                                 <?php
-                            if (!empty($reg['img_profile'])) { ?>
+                                if (!empty($reg['img_profile'])) { ?>
                                 <img class="h-32 rounded-full" src=<?= $reg['img_profile'] ?> />
                                 <?php
-                            } else {
+                                } else {
+                                ?>
+                                <img class="h-32 rounded-full" src="../img/profile_picture_default.png" />
+                                <?php } ?>
+                            </div>
+                            <div class="mt-2 mb-1 px-3 text-center text-lg">
+                                <?= $fila['nomUsuariSeguidor'] ?>
+                            </div>
+                            <div class="flex flex-row justify-center items-center">
+                                <!-- <a class="text-sm mt-0 mb-3 text-slate-400 font-bold text-center border-2 border-slate-400 rounded-full px-1 py-1 w-24 mt-5"
+                                    onclick="delete_follower('<?= $user ?>', '<?= $fila['nomUsuariSeguidor'] ?>')">Eliminar</a> -->
+                            </div>
+                        </div>
+                    </div>
+
+                    <?php
+                            } else { ?>
+                    <div class="container ">
+                        <div
+                            class="m-auto my-8 w-full max-w-lg items-center justify-center overflow-hidden rounded-2xl bg-blue-100 shadow-xl">
+                            <div class="h-24 bg-white"></div>
+                            <div class="-mt-20 flex justify-center">
+                                <?php
+                                if (!empty($reg['img_profile'])) { ?>
+                                <img class="h-32 rounded-full" src=<?= $reg['img_profile'] ?> />
+                                <?php
+                                } else {
                                 ?>
                                 <img class="h-32 rounded-full" src="../img/profile_picture_default.png" />
                                 <?php } ?>
@@ -87,8 +114,7 @@ include('../conexion.php'); ?>
                             </div>
                         </div>
                     </div>
-
-                    <?php
+                    <?php }
                         }
                     } ?>
                 </div>
@@ -105,7 +131,7 @@ include('../conexion.php'); ?>
 
     function delete_follower(user, user_follower) {
         var users = JSON.parse(JSON.stringify(<?= json_encode($user_id) ?>));
-        alertify.alert("¿Quieres eliminar al seguidor?",
+        alertify.confirm("¿Quieres eliminar al seguidor?",
             "Tinderinfo no informará a " + user_follower + " de que ya no forma parte de tus seguidores",
             function () {
                 $.post('userUnfollow.php', {
@@ -119,6 +145,8 @@ include('../conexion.php'); ?>
                     }
                 })
             },
+            function () {
+            }
         );
     }
 
