@@ -28,4 +28,8 @@
 
 </html> -->
 
-<?php header("Location: BD245614068P/publicacio.php"); ?>
+<?php //header("Location: /BD245614068P/publicacio.php"); ?>
+
+<script>
+    location.href= "BD245614068P/publicacio.php";
+</script>

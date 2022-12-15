@@ -34,7 +34,9 @@ DECLARE nomUsuariSeguin VARCHAR(25);
 DECLARE var_final INTEGER DEFAULT 0;
 DECLARE cursor1 CURSOR FOR SELECT nomUsuariSeguidor, nomUsuariSeguint FROM follow WHERE nomUsuariSeguint = NEW.nomUsuari;
 DECLARE CONTINUE HANDLER FOR NOT FOUND SET var_final = 1;
-
+SET @V1 = "***** Hola he publicado una historia miralo aqui :";
+SET @V1 += NEW.idHistoria;
+SET @V1 += " *****";
   OPEN cursor1;
     bucle: LOOP
 
@@ -45,7 +47,7 @@ DECLARE CONTINUE HANDLER FOR NOT FOUND SET var_final = 1;
 
         INSERT INTO missatge (missatge, nomUsuariEmi, nomUsuariRec) 
         VALUES
-        ('Hola esta es mi historia', nomUsuariSeguin, nomUsuariSeguido);
+        (@V1, nomUsuariSeguin, nomUsuariSeguido);
 
     END LOOP bucle;
   CLOSE cursor1;

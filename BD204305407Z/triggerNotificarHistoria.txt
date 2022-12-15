@@ -1,0 +1,26 @@
+DELIMITER //
+CREATE TRIGGER notificar_historia
+AFTER INSERT ON historia FOR EACH ROW
+BEGIN
+DECLARE nomUsuariSeguido VARCHAR(25);
+DECLARE nomUsuariSeguin VARCHAR(25);
+DECLARE var_final INTEGER DEFAULT 0;
+DECLARE cursor1 CURSOR FOR SELECT nomUsuariSeguidor, nomUsuariSeguint FROM follow WHERE nomUsuariSeguint = NEW.nomUsuari;
+DECLARE CONTINUE HANDLER FOR NOT FOUND SET var_final = 1;
+SET @V1 = CONCAT("***** Hola he publicado una historia miralo aqui :", NEW.idHistoria);
+
+  OPEN cursor1;
+    bucle: LOOP
+
+        FETCH cursor1 INTO nomUsuariSeguido, nomUsuariSeguin;
+        IF var_final = 1 THEN
+        LEAVE bucle;
+        END IF;
+
+        INSERT INTO missatge (missatge, nomUsuariEmi, nomUsuariRec) 
+        VALUES
+        (@V1, nomUsuariSeguin, nomUsuariSeguido);
+
+    END LOOP bucle;
+  CLOSE cursor1;
+END//;

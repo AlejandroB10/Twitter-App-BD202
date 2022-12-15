@@ -95,13 +95,13 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari, $img_profile)
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Missatge</title>
-    <link rel="stylesheet" href="../lib/app.css">
-    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="../tailwind.js"></script>
+    <script src="https://cdn.lordicon.com/qjzruarw.js"></script>
 </head>
 
 <body>
     <header>
-        <?php include('../header.php'); ?>
+        <?php include('header.php'); ?>
     </header>
     <main>
         <div>
@@ -337,7 +337,6 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari, $img_profile)
 
     }
 </script>
-
 <script>
     function enviarmissate(nomU, nomR, img_profile) {
 

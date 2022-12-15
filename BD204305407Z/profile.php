@@ -298,7 +298,7 @@ $user_data = [
                 </div>
 
                 <!-- Compartir  -->
-                <div style="display: none;" id="share" class="items-center justify-center mt-16" id="publications">
+                <div style="display: none;" id="share" class="items-center justify-center mt-16">
                     <?php
                     $query_share = "SELECT publiOri.idPublicacio, publi.nomUsuari, publi.titlePub, publi.textPub, usuari.img_profile, publiOri.nomUsuari AS nomShare
                     FROM publicacio publi JOIN publicacio publiOri ON publiOri.nomUsuari = '$user' and publi.idPublicacio = publiOri.idPubliOri 

@@ -1,0 +1,230 @@
+DELIMITER //
+CREATE PROCEDURE backUp()
+NOT DETERMINISTIC CONTAINS SQL SQL SECURITY DEFINER
+BEGIN
+    
+    -- SI EXISTE LA ELIMINAMOS
+
+    DROP DATABASE IF EXISTS bdbackup;
+
+
+    -- CREAMOS LA BASE DE DATOS DEL BACKUP
+    CREATE DATABASE bdbackup;
+
+    CREATE TABLE bdbackup.usuari( 
+        nomUsuari VARCHAR(25) NOT NULL, 
+        contrasenya VARCHAR(25) NOT NULL, 
+        descripcio  VARCHAR(200),
+        img_profile VARCHAR(255), 
+        PRIMARY KEY (nomUsuari) 
+    );
+    CREATE TABLE bdbackup.missatge( 
+        idMissatge INT NOT NULL AUTO_INCREMENT, 
+        missatge VARCHAR(480) NOT NULL, 
+        dataMissatge TIMESTAMP NOT NULL,
+        nomUsuariEmi VARCHAR(25) NOT NULL, 
+        nomUsuariRec VARCHAR(25) NOT NULL, 
+
+        PRIMARY KEY (idMissatge), 
+        FOREIGN KEY (nomUsuariEmi) REFERENCES usuari(nomUsuari), 
+        FOREIGN KEY (nomUsuariRec) REFERENCES usuari(nomUsuari)
+
+    );
+
+    CREATE TABLE bdbackup.follow( 
+        nomUsuariSeguidor VARCHAR(25) NOT NULL, 
+        nomUsuariSeguint VARCHAR(25) NOT NULL, 
+        PRIMARY KEY (nomUsuariSeguidor, nomUsuariSeguint), 
+        FOREIGN KEY (nomUsuariSeguidor) REFERENCES usuari(nomUsuari), 
+        FOREIGN KEY (nomUsuariSeguint) REFERENCES usuari(nomUsuari)
+    );
+
+    CREATE TABLE bdbackup.historia( 
+        idHistoria INT NOT NULL AUTO_INCREMENT,
+        titleHist VARCHAR(25) NOT NULL,
+        textHist VARCHAR(480) NOT NULL, 
+        privacitat ENUM('Publica', 'Privada') NOT NULL, 
+        nomUsuari VARCHAR(25) NOT NULL, 
+        PRIMARY KEY (idHistoria), 
+        FOREIGN KEY (nomUsuari) REFERENCES usuari(nomUsuari)
+    );
+
+    CREATE TABLE bdbackup.publicacio( 
+        idPublicacio INT NOT NULL AUTO_INCREMENT,  
+        titlePub VARCHAR(25) NOT NULL,
+        textPub VARCHAR(480) NOT NULL,
+        dataPub DATETIME NOT NULL,
+        nomUsuari VARCHAR(25) NOT NULL,  
+        idHistoria INT,
+        idPubliOri INT,
+        PRIMARY KEY (idPublicacio), 
+        FOREIGN KEY (idHistoria) REFERENCES historia(idHistoria), 
+        FOREIGN KEY (nomUsuari) REFERENCES usuari(nomUsuari), 
+        FOREIGN KEY (idPubliOri) REFERENCES publicacio(idPublicacio)
+    );
+
+    CREATE TABLE bdbackup.resposta( 
+        idResposta INT NOT NULL AUTO_INCREMENT, 
+        dataRes TIMESTAMP NOT NULL,  
+        missatgeRes VARCHAR(25) NOT NULL, 
+        idPublicacio INT NOT NULL,
+        nomUsuari VARCHAR(25) NOT NULL, 
+        PRIMARY KEY (idResposta), 
+        FOREIGN KEY (idPublicacio) REFERENCES publicacio(idPublicacio), 
+        FOREIGN KEY (nomUsuari) REFERENCES usuari(nomUsuari)
+    );
+    
+    CALL usuariBackUp();
+    CALL missatgeBackUp();
+    CALL followBackUp();
+    CALL historiaBackUp();
+    CALL publicacioBackUp();
+    CALL respostaBackUp();
+
+END;
+
+
+DELIMITER //
+CREATE PROCEDURE usuariBackUp()
+BEGIN
+    DECLARE acabar INTEGER default 0;
+    DECLARE nomUsuariBackUp VARCHAR(25);
+    DECLARE contrasenyaBackUp VARCHAR(25);
+    DECLARE descripcioBackUp  VARCHAR(200);
+    DECLARE img_profileBackUp VARCHAR(255);
+    DECLARE usbackUp CURSOR FOR SELECT * FROM practica2.usuari;
+        DECLARE CONTINUE HANDLER FOR NOT FOUND SET acabar = 1;
+    OPEN usbackUp;
+        etiq0: LOOP
+            FETCH usbackUp INTO nomUsuariBackUp, contrasenyaBackUp, descripcioBackUp, img_profileBackUp;
+
+            IF acabar = 1 THEN
+                LEAVE etiq0;
+            END IF;
+
+            INSERT INTO bdbackup.usuari1 (nomUsuari,contrasenya,descripcio,img_profile) VALUES (nomUsuariBackUp, contrasenyaBackUp, descripcioBackUp, img_profileBackUp);
+        END LOOP;
+    CLOSE usbackUp;
+END;
+
+DELIMITER //
+CREATE PROCEDURE missatgeBackUp()
+BEGIN
+    DECLARE acabar INTEGER default 0;
+    DECLARE idMissatgeBackUp INT;
+    DECLARE missatgeBackUp VARCHAR(480);
+    DECLARE dataMissatgeBackUp  TIMESTAMP;
+    DECLARE nomUsuariEmiBackUp VARCHAR(25);
+    DECLARE nomUsuariRecBackUp VARCHAR(25);
+
+    DECLARE missbackUp CURSOR FOR SELECT * FROM practica2.missatge;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET acabar = 1;
+    OPEN missbackUp;
+        etiq0: LOOP
+            FETCH missbackUp INTO idMissatgeBackUp, missatgeBackUp, dataMissatgeBackUp, nomUsuariEmiBackUp, nomUsuariRecBackUp;
+
+            IF acabar = 1 THEN
+                LEAVE etiq0;
+            END IF;
+        
+        INSERT INTO bdbackup.missatge (idMissatge,missatge,dataMissatge,nomUsuariEmi,nomUsuariRec) VALUES (idMissatgeBackUp, missatgeBackUp, dataMissatgeBackUp, nomUsuariEmiBackUp, nomUsuariRecBackUp);
+
+        END LOOP;
+    CLOSE missbackUp;
+END;
+
+DELIMITER //
+CREATE PROCEDURE followBackUp()
+BEGIN
+    DECLARE acabar INTEGER default 0;
+    DECLARE nomUsuariSeguidorBackUp VARCHAR(25);
+    DECLARE nomUsuariSeguintBackUp VARCHAR(25);
+    DECLARE followbackUp CURSOR FOR SELECT * FROM practica2.follow;
+    DECLARE CONTINUE HANDLER FOR NOT FOUND SET acabar = 1;
+    OPEN followbackUp;
+        etiq0: LOOP
+            FETCH followbackUp INTO nomUsuariSeguidorBackUp, nomUsuariSeguintBackUp;
+            
+            IF acabar = 1 THEN
+                LEAVE etiq0;
+            END IF;
+        
+        INSERT INTO bdbackup.follow (nomUsuariSeguidor,nomUsuariSeguint) VALUES (nomUsuariSeguidorBackUp, nomUsuariSeguintBackUp);
+
+        END LOOP;
+    CLOSE followbackUp;
+END;
+
+DELIMITER //
+CREATE PROCEDURE historiaBackUp()
+BEGIN
+    DECLARE acabar INTEGER default 0;
+    DECLARE idHistoriaBackUp INT;
+    DECLARE titleHistBackUp VARCHAR(25);
+    DECLARE textHistBackUp VARCHAR(480);
+    DECLARE privacitatBackUp ENUM('Publica', 'Privada');
+    DECLARE nomUsuariHBackUp VARCHAR(25);
+    DECLARE hisbackUp CURSOR FOR SELECT * FROM practica2.historia;
+        DECLARE CONTINUE HANDLER FOR NOT FOUND SET acabar = 1;
+    OPEN hisbackUp;
+        etiq0: LOOP
+            FETCH hisbackUp INTO idHistoriaBackUp, titleHistBackUp, textHistBackUp, privacitatBackUp, nomUsuariHBackUp;
+
+            IF acabar = 1 THEN
+                LEAVE etiq0;
+            END IF;
+
+            INSERT INTO bdbackup.historia (idHistoria,titleHist,textHist, privacitat, nomUsuari) VALUES (idHistoriaBackUp, titleHistBackUp, textHistBackUp, privacitatBackUp, nomUsuariHBackUp);
+        END LOOP;
+    CLOSE hisbackUp;
+END;
+
+DELIMITER //
+CREATE PROCEDURE publicacioBackUp()
+BEGIN
+    DECLARE acabar INTEGER default 0;
+    DECLARE idPublicacioBackUp INT;
+    DECLARE titlePubBackUp VARCHAR(25);
+    DECLARE textPubBackUp  VARCHAR(480);
+    DECLARE dataPubBackUp DATETIME;
+    DECLARE nomUsuariPBackUp VARCHAR(25);
+    DECLARE idHistoriaPBackUp INT;
+    DECLARE idPubliOriBackUp INT;
+    DECLARE pubbackUp CURSOR FOR SELECT * FROM practica2.publicacio;
+        DECLARE CONTINUE HANDLER FOR NOT FOUND SET acabar = 1;
+    OPEN pubbackUp;
+        etiq0: LOOP
+            FETCH pubbackUp INTO idPublicacioBackUp, titlePubBackUp, textPubBackUp, dataPubBackUp, nomUsuariPBackUp, idHistoriaPBackUp, idPubliOriBackUp;
+
+            IF acabar = 1 THEN
+                LEAVE etiq0;
+            END IF;
+
+            INSERT INTO bdbackup.publicacio (idPublicacio, titlePub, textPub, dataPub, nomUsuari, idHistoria, idPubliOri) VALUES (idPublicacioBackUp, titlePubBackUp, textPubBackUp, dataPubBackUp, nomUsuariPBackUp, idHistoriaPBackUp, idPubliOriBackUp);
+        END LOOP;
+    CLOSE pubbackUp;
+END;
+
+DELIMITER //
+CREATE PROCEDURE respostaBackUp()
+BEGIN
+    DECLARE acabar INTEGER default 0;
+    DECLARE idRespostaBackUp INT;
+    DECLARE dataResBackUp TIMESTAMP;
+    DECLARE missatgeResBackUp VARCHAR(25);
+    DECLARE idPublicacioRBackUp INT;
+    DECLARE nomUsuariRBackUp VARCHAR(25);
+    DECLARE resbackUp CURSOR FOR SELECT * FROM practica2.resposta;
+        DECLARE CONTINUE HANDLER FOR NOT FOUND SET acabar = 1;
+    OPEN resbackUp;
+        etiq0: LOOP
+            FETCH resbackUp INTO idRespostaBackUp, dataResBackUp, missatgeResBackUp, idPublicacioRBackUp, nomUsuariRBackUp;
+
+            IF acabar = 1 THEN
+                LEAVE etiq0;
+            END IF;
+
+            INSERT INTO bdbackup.resposta (idResposta, dataRes, missatgeRes, idPublicacio, nomUsuari) VALUES (idRespostaBackUp, dataResBackUp, missatgeResBackUp, idPublicacioRBackUp, nomUsuariRBackUp);
+        END LOOP;
+    CLOSE resbackUp;
+END;
