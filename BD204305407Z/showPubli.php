@@ -109,7 +109,7 @@ $user = $_SESSION["user"];
                     <?php
                     if (isset($_GET['idHistorias'])) {
                         $idHistoria = $_GET['idHistorias'];
-                        $show_publi = "SELECT historia.titleHist, publicacio.titlePub, publicacio.textPub, publicacio.nomUsuari 
+                        $show_publi = "SELECT historia.titleHist, publicacio.titlePub, publicacio.textPub, publicacio.nomUsuari, publicacio.idPublicacio
                             FROM historia 
                             JOIN publicacio ON historia.idHistoria = '$idHistoria' and historia.idHistoria = publicacio.idHistoria 
                             ORDER BY publicacio.dataPub DESC";
