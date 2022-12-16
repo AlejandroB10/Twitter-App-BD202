@@ -7,7 +7,7 @@ DECLARE nomUsuariSeguin VARCHAR(25);
 DECLARE var_final INTEGER DEFAULT 0;
 DECLARE cursor1 CURSOR FOR SELECT nomUsuariSeguidor, nomUsuariSeguint FROM follow WHERE nomUsuariSeguint = NEW.nomUsuari;
 DECLARE CONTINUE HANDLER FOR NOT FOUND SET var_final = 1;
-SET @V1 = CONCAT("***** Hola he publicado una historia miralo aqui :", NEW.idHistoria);
+SET @V1 = CONCAT("***** Historia:", NEW.idHistoria,"-",NEW.titleHist);
 
   OPEN cursor1;
     bucle: LOOP
@@ -23,4 +23,4 @@ SET @V1 = CONCAT("***** Hola he publicado una historia miralo aqui :", NEW.idHis
 
     END LOOP bucle;
   CLOSE cursor1;
-END//;
+END;

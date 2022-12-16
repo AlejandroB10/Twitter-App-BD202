@@ -162,16 +162,34 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari, $img_profile)
 
                                     $imagen = mysqli_fetch_array($result_imagen_perfil);
 
+                                    if ($imagen['img_profile']==null) {
+
+                                        $imgperfil = "profile_picture_default.png";
+                                      
+                                    } else {
+
+                                        $imgperfil = $imagen['img_profile'];
+                                    }
+
 
                                     if (in_array($nomNou, $personas_desconicidas)) {
 
-                                        addcontacto($nomNou, "?", "*** NO HAY MENSAJES ***", $nomUsuari, $imagen['img_profile']);
+                                        addcontacto($nomNou, "?", "*** NO HAY MENSAJES ***", $nomUsuari, $imgperfil);
                                     }
                                 }
 
                                 while ($reg = mysqli_fetch_array($result_chats)) {
 
-                                    addcontacto($reg['who'], $reg['dataMissatge'], $reg['missatge'], $nomUsuari, $reg['img_profile']);
+                                    if ($reg['img_profile']==null) {
+
+                                        $imgperfil = "profile_picture_default.png";
+                                      
+                                    } else {
+
+                                        $imgperfil = $reg['img_profile'];
+                                    }
+
+                                    addcontacto($reg['who'], $reg['dataMissatge'], $reg['missatge'], $nomUsuari, $imgperfil);
                                 }
 
                                 ?>
@@ -224,9 +242,7 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari, $img_profile)
 
 
                 var data = JSON.parse(this.responseText);
-                console.log(data);
 
-                //  var html = 'holaaaaa'+name;
 
                 var html = `  <div class="py-2 px-3 bg-grey-lighter flex flex-row justify-between items-center">
                                 <div class="flex items-center">
@@ -265,12 +281,14 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari, $img_profile)
 
                     var estilo;
                     var esHistoria;
+                    var tituloHist;
+                    var idHist;
 
                     if (nomEmissor == name) {
 
                         estilo = "flex mb-2";
                         color = "#F2F2F2";
-                    
+
                     } else {
 
                         estilo = "flex justify-end mb-2";
@@ -278,32 +296,50 @@ function addcontacto($who, $dataMissatge, $missatge, $nomUsuari, $img_profile)
 
                     }
 
+                    esHistoria = missatge.slice(0, 5);
 
-                   esHistoria = missatge.slice(0,5);
-              
+                    if (esHistoria == "*****") {
 
-                    if(esHistoria=="*****"){
 
                         color = "#FFC96C";
+                        idHist = missatge.substring(missatge.indexOf(":") + 1, missatge.indexOf("-"));
+                        tituloHist = missatge.substring(missatge.indexOf("-") + 1, missatge.length);
 
-                    }
+                        missatge = "HE PUBLICADO UNA NUEVA HISTORIA! -";
 
-                    html += `
+                        html += `
 
-                        <div class="` + estilo + `">
-                            <div class="rounded py-2 px-3" style="background-color: ` + color + `">
-                                <p class="text-sm mt-1">
-                                    ` + missatge + `
-                                </p>
-                                <p class="text-right text-xs text-grey-dark mt-1">
-                                    ` + dataM + `
-                                </p>
+                            <div class="` + estilo + `">
+                                <div class="rounded py-2 px-3" style="background-color: ` + color + `">
+                                    <p class="text-sm mt-1">
+                                        ` + missatge + `
+                                        <a class =" underline text-blue-700 " href="../BD204305407Z/showPubli.php?idHistorias= ` + idHist + `"> ` + tituloHist + `</a>
+                                    </p>
+                                    <p class="text-right text-xs text-grey-dark mt-1">
+                                        ` + dataM + `
+                                    </p>
+                                </div>
                             </div>
-                        </div>
                         `;
 
+                    } else {
 
 
+                        html += `
+
+                            <div class="` + estilo + `">
+                                <div class="rounded py-2 px-3" style="background-color: ` + color + `">
+                                    <p class="text-sm mt-1">
+                                        ` + missatge + `
+                                    </p>
+                                    <p class="text-right text-xs text-grey-dark mt-1">
+                                        ` + dataM + `
+                                    </p>
+                                </div>
+                            </div>
+                            `;
+
+                    } 
 
                 }
                 html += `

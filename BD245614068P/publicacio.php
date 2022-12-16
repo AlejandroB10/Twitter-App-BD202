@@ -2,6 +2,9 @@
 
 include('../conexion.php');
 
+session_start();
+$user = $_SESSION['user'];
+
 // $publicacions_query = "SELECT * FROM publicacio WHERE nomUsuari != USUARI.nomUsuari AND idHistoria = NULL ORDER BY dataPub DESC";
 //$publicacions_query = "SELECT * FROM publicacio WHERE idHistoria IS NULL ORDER BY dataPub DESC";
 
@@ -71,8 +74,7 @@ function insertarPub()
 
                 $result_publi = consultar("localhost", "root", "", $publicacions_query);
 
-                session_start();
-                $user = $_SESSION['user'];
+            
 
                 while ($fila = mysqli_fetch_array($result_publi)):
                     $user_img = $fila['nomUsuari'];
