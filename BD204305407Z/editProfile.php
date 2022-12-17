@@ -80,7 +80,7 @@ $user_data = ['usuari' => $reg['nomUsuari'], 'descripcio' => $reg['descripcio'],
                             <label for="user_name" class="text-left text-gray-700 ml-2 text-sm">Usuario<span
                                     class="text-red-400">*</span></label>
                             <input type="text" id="nom_user" name="nom_user"
-                                class="pl-4 focus mt-1 block w-80 border-none bg-gray-100 h-11 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
+                                class="pl-4 focus mt-1 block w-80 border-none bg-gray-100 h-11 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100" disabled>
                         </div>
                         <div class="mt-7">
                             <label for="user_name" class="text-gray-700 ml-2 text-sm">Descripción</label>

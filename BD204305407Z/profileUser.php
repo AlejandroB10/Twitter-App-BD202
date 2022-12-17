@@ -146,19 +146,21 @@ $user_data = [
                 <!-- Publicaciones -->
                 <div class="items-center justify-center mt-16" id="publications">
                     <?php
-                    $publi_query = "SELECT idPublicacio, titlePub, textPub, usuari.nomUsuari, usuari.img_profile, dataPub FROM publicacio 
+                    $publi_query = "SELECT idPublicacio, titlePub, textPub, usuari.nomUsuari, usuari.img_profile, dataPub, idPubliOri FROM publicacio 
                         JOIN usuari ON publicacio.nomUsuari = '$user_profile' and usuari.nomUsuari = publicacio.nomUsuari and idHistoria IS NULL  ORDER BY dataPub DESC";
                     $result_publi = consultar("localhost", "root", "", $publi_query);
-                    while ($fila = mysqli_fetch_array($result_publi)): ?>
+                    while ($fila = mysqli_fetch_array($result_publi)):
+                        if (is_null($fila['idPubliOri'])) {
+                    ?>
                     <div
                         class="p-6 bg-white shadow-lg flex justify-start rounded-lg my-8 sm:flex sm:space-x-8 sm:p-8 w-full">
 
                         <?php
-                        if (!empty($fila['img_profile'])) { ?>
+                            if (!empty($fila['img_profile'])) { ?>
                         <img class="w-20 h-20 flex items-center rounded-full" src=<?= $fila['img_profile'] ?>
                         alt="user avatar" height="220" width="220" loading="lazy">
                         <?php
-                        } else {
+                            } else {
                         ?>
                         <img class="w-20 h-20 flex items-center rounded-full" src="../img/profile_picture_default.png"
                             alt="user avatar" height="220" width="220" loading="lazy">
@@ -175,7 +177,7 @@ $user_data = [
                             <div class="grid grid-cols-3 gap-4 mt-4">
                                 <div class="col-span-2 flex items-center justify-start">
                                     <?php
-                        if ($fila['nomUsuari'] == $user) { ?>
+                            if ($fila['nomUsuari'] == $user) { ?>
 
                                     <a href="../BD245614068P/editarPub.php?id=<?= $fila['idPublicacio'] ?>"
                                         class="mr-2">
@@ -219,11 +221,11 @@ $user_data = [
                             <p class="text-sm font-semibold">Comentarios: </p>
                             <!-- COMENTARIOS ESCRITOS -->
                             <?php
-                        //SELECT PARA MOSTRAR LOS COMENTARIOS
-                        $idPub = $fila['idPublicacio'];
-                        $res_query = "SELECT * FROM resposta WHERE idPublicacio = '$idPub'";
-                        $result_res = consultar("localhost", "root", "", $res_query);
-                        while ($f = mysqli_fetch_array($result_res)): ?>
+                            //SELECT PARA MOSTRAR LOS COMENTARIOS
+                            $idPub = $fila['idPublicacio'];
+                            $res_query = "SELECT * FROM resposta WHERE idPublicacio = '$idPub'";
+                            $result_res = consultar("localhost", "root", "", $res_query);
+                            while ($f = mysqli_fetch_array($result_res)): ?>
 
                             <div style="margin-top: 5px;" class="mt-0 flex items-center justify-start">
                                 <p class="text-gray-600 text-sm">
@@ -241,6 +243,8 @@ $user_data = [
                                     action="../BD243216941X/insertComent.php?id=<?= $fila['idPublicacio'] ?>">
                                     <input type="text" name="missatge" placeholder="Comentario"
                                         class="pl-4 focus mt-1 block w-full border-none bg-gray-100 h-8 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
+                                        <input type="hidden" name="origin" value="3">
+                                            <input type="hidden" name="user_profile" value="<?= $user_profile ?>">
                                     <!-- mirar de esconder el boton submit -->
                                     <input type="submit" value="">
                                 </form>
@@ -248,6 +252,7 @@ $user_data = [
                         </div>
                     </div>
                     <?php
+                        }
                     endwhile;
                     ?>
                 </div>
@@ -422,6 +427,8 @@ $user_data = [
                                         action="../BD243216941X/insertComent.php?id=<?= $fila_share['idPublicacio'] ?>">
                                         <input type="text" name="missatge" placeholder="Comentario"
                                             class="pl-4 focus mt-1 block w-full border-none bg-gray-100 h-8 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
+                                            <input type="hidden" name="origin" value="3">
+                                            <input type="hidden" name="user_profile" value="<?= $user_profile ?>">
                                         <!-- mirar de esconder el boton submit -->
                                         <input type="submit" value="">
                                     </form>
@@ -528,14 +535,6 @@ $user_data = [
                 }
             })
         });
-    });
-
-    $('#comment').click(function () {
-        if ($('#comentaris').is(':visible')) {
-            $('#comentaris').hide();
-        } else {
-            $('#comentaris').show();
-        }
     });
 
     $('#publication_buttom').click(function () {

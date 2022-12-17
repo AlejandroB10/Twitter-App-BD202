@@ -1,88 +1,3 @@
-DELIMITER //
-CREATE PROCEDURE backUp()
-NOT DETERMINISTIC CONTAINS SQL SQL SECURITY DEFINER
-BEGIN
-    
-    -- SI EXISTE LA ELIMINAMOS
-
-    DROP DATABASE IF EXISTS bdbackup;
-
-
-    -- CREAMOS LA BASE DE DATOS DEL BACKUP
-    CREATE DATABASE bdbackup;
-
-    CREATE TABLE bdbackup.usuari( 
-        nomUsuari VARCHAR(25) NOT NULL, 
-        contrasenya VARCHAR(25) NOT NULL, 
-        descripcio  VARCHAR(200),
-        img_profile VARCHAR(255), 
-        PRIMARY KEY (nomUsuari) 
-    );
-    CREATE TABLE bdbackup.missatge( 
-        idMissatge INT NOT NULL AUTO_INCREMENT, 
-        missatge VARCHAR(480) NOT NULL, 
-        dataMissatge TIMESTAMP NOT NULL,
-        nomUsuariEmi VARCHAR(25) NOT NULL, 
-        nomUsuariRec VARCHAR(25) NOT NULL, 
-
-        PRIMARY KEY (idMissatge), 
-        FOREIGN KEY (nomUsuariEmi) REFERENCES usuari(nomUsuari), 
-        FOREIGN KEY (nomUsuariRec) REFERENCES usuari(nomUsuari)
-
-    );
-
-    CREATE TABLE bdbackup.follow( 
-        nomUsuariSeguidor VARCHAR(25) NOT NULL, 
-        nomUsuariSeguint VARCHAR(25) NOT NULL, 
-        PRIMARY KEY (nomUsuariSeguidor, nomUsuariSeguint), 
-        FOREIGN KEY (nomUsuariSeguidor) REFERENCES usuari(nomUsuari), 
-        FOREIGN KEY (nomUsuariSeguint) REFERENCES usuari(nomUsuari)
-    );
-
-    CREATE TABLE bdbackup.historia( 
-        idHistoria INT NOT NULL AUTO_INCREMENT,
-        titleHist VARCHAR(25) NOT NULL,
-        textHist VARCHAR(480) NOT NULL, 
-        privacitat ENUM('Publica', 'Privada') NOT NULL, 
-        nomUsuari VARCHAR(25) NOT NULL, 
-        PRIMARY KEY (idHistoria), 
-        FOREIGN KEY (nomUsuari) REFERENCES usuari(nomUsuari)
-    );
-
-    CREATE TABLE bdbackup.publicacio( 
-        idPublicacio INT NOT NULL AUTO_INCREMENT,  
-        titlePub VARCHAR(25) NOT NULL,
-        textPub VARCHAR(480) NOT NULL,
-        dataPub DATETIME NOT NULL,
-        nomUsuari VARCHAR(25) NOT NULL,  
-        idHistoria INT,
-        idPubliOri INT,
-        PRIMARY KEY (idPublicacio), 
-        FOREIGN KEY (idHistoria) REFERENCES historia(idHistoria), 
-        FOREIGN KEY (nomUsuari) REFERENCES usuari(nomUsuari), 
-        FOREIGN KEY (idPubliOri) REFERENCES publicacio(idPublicacio)
-    );
-
-    CREATE TABLE bdbackup.resposta( 
-        idResposta INT NOT NULL AUTO_INCREMENT, 
-        dataRes TIMESTAMP NOT NULL,  
-        missatgeRes VARCHAR(25) NOT NULL, 
-        idPublicacio INT NOT NULL,
-        nomUsuari VARCHAR(25) NOT NULL, 
-        PRIMARY KEY (idResposta), 
-        FOREIGN KEY (idPublicacio) REFERENCES publicacio(idPublicacio), 
-        FOREIGN KEY (nomUsuari) REFERENCES usuari(nomUsuari)
-    );
-    
-    CALL usuariBackUp();
-    CALL missatgeBackUp();
-    CALL followBackUp();
-    CALL historiaBackUp();
-    CALL publicacioBackUp();
-    CALL respostaBackUp();
-
-END;
-
 
 DELIMITER //
 CREATE PROCEDURE usuariBackUp()
@@ -227,4 +142,89 @@ BEGIN
             INSERT INTO bdbackup.resposta (idResposta, dataRes, missatgeRes, idPublicacio, nomUsuari) VALUES (idRespostaBackUp, dataResBackUp, missatgeResBackUp, idPublicacioRBackUp, nomUsuariRBackUp);
         END LOOP;
     CLOSE resbackUp;
+END;
+
+DELIMITER //
+CREATE PROCEDURE backUp()
+NOT DETERMINISTIC CONTAINS SQL SQL SECURITY DEFINER
+BEGIN
+    
+    -- SI EXISTE LA ELIMINAMOS
+
+    DROP DATABASE IF EXISTS bdbackup;
+
+
+    -- CREAMOS LA BASE DE DATOS DEL BACKUP
+    CREATE DATABASE bdbackup;
+
+    CREATE TABLE bdbackup.usuari( 
+        nomUsuari VARCHAR(25) NOT NULL, 
+        contrasenya VARCHAR(25) NOT NULL, 
+        descripcio  VARCHAR(200),
+        img_profile VARCHAR(255), 
+        PRIMARY KEY (nomUsuari) 
+    );
+    CREATE TABLE bdbackup.missatge( 
+        idMissatge INT NOT NULL AUTO_INCREMENT, 
+        missatge VARCHAR(480) NOT NULL, 
+        dataMissatge TIMESTAMP NOT NULL,
+        nomUsuariEmi VARCHAR(25) NOT NULL, 
+        nomUsuariRec VARCHAR(25) NOT NULL, 
+
+        PRIMARY KEY (idMissatge), 
+        FOREIGN KEY (nomUsuariEmi) REFERENCES usuari(nomUsuari), 
+        FOREIGN KEY (nomUsuariRec) REFERENCES usuari(nomUsuari)
+
+    );
+
+    CREATE TABLE bdbackup.follow( 
+        nomUsuariSeguidor VARCHAR(25) NOT NULL, 
+        nomUsuariSeguint VARCHAR(25) NOT NULL, 
+        PRIMARY KEY (nomUsuariSeguidor, nomUsuariSeguint), 
+        FOREIGN KEY (nomUsuariSeguidor) REFERENCES usuari(nomUsuari), 
+        FOREIGN KEY (nomUsuariSeguint) REFERENCES usuari(nomUsuari)
+    );
+
+    CREATE TABLE bdbackup.historia( 
+        idHistoria INT NOT NULL AUTO_INCREMENT,
+        titleHist VARCHAR(25) NOT NULL,
+        textHist VARCHAR(480) NOT NULL, 
+        privacitat ENUM('Publica', 'Privada') NOT NULL, 
+        nomUsuari VARCHAR(25) NOT NULL, 
+        PRIMARY KEY (idHistoria), 
+        FOREIGN KEY (nomUsuari) REFERENCES usuari(nomUsuari)
+    );
+
+    CREATE TABLE bdbackup.publicacio( 
+        idPublicacio INT NOT NULL AUTO_INCREMENT,  
+        titlePub VARCHAR(25) NOT NULL,
+        textPub VARCHAR(480) NOT NULL,
+        dataPub DATETIME NOT NULL,
+        nomUsuari VARCHAR(25) NOT NULL,  
+        idHistoria INT,
+        idPubliOri INT,
+        PRIMARY KEY (idPublicacio), 
+        FOREIGN KEY (idHistoria) REFERENCES historia(idHistoria), 
+        FOREIGN KEY (nomUsuari) REFERENCES usuari(nomUsuari), 
+        FOREIGN KEY (idPubliOri) REFERENCES publicacio(idPublicacio)
+    );
+
+    CREATE TABLE bdbackup.resposta( 
+        idResposta INT NOT NULL AUTO_INCREMENT, 
+        dataRes TIMESTAMP NOT NULL,  
+        missatgeRes VARCHAR(25) NOT NULL, 
+        idPublicacio INT NOT NULL,
+        nomUsuari VARCHAR(25) NOT NULL, 
+        PRIMARY KEY (idResposta), 
+        FOREIGN KEY (idPublicacio) REFERENCES publicacio(idPublicacio), 
+        FOREIGN KEY (nomUsuari) REFERENCES usuari(nomUsuari)
+    );
+    
+    CALL usuariBackUp();
+    CALL missatgeBackUp();
+    CALL followBackUp();
+    CALL historiaBackUp();
+    CALL publicacioBackUp();
+    CALL respostaBackUp();
+
 END;

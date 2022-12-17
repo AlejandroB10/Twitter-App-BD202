@@ -11,44 +11,27 @@ BEGIN
     	username, pass, '../img/profile_picture_default.png'
     );
     RETURN TRUE;
-END//;
+END;
 
 DELIMITER //
 CREATE PROCEDURE modifyUser(IN username varchar(25), IN description varchar(200), IN pass varchar(25))
 BEGIN
 UPDATE usuari SET usuari.descripcio = description, usuari.contrasenya = pass WHERE usuari.nomUsuari = username;
-END//;
+END;
 
 DELIMITER //
 CREATE PROCEDURE modifyUserImgProfile(IN username varchar(25), IN img_profile VARCHAR(255))
 BEGIN
     UPDATE usuari SET img_profile = img_profile WHERE nomUsuari = username;
-END//;
+END;
 
 DELIMITER //
-CREATE TRIGGER notificar_historia
-AFTER INSERT ON historia FOR EACH ROW
+CREATE PROCEDURE deleteUser(IN username varchar(25))
 BEGIN
-DECLARE nomUsuariSeguido VARCHAR(25);
-DECLARE nomUsuariSeguin VARCHAR(25);
-DECLARE var_final INTEGER DEFAULT 0;
-DECLARE cursor1 CURSOR FOR SELECT nomUsuariSeguidor, nomUsuariSeguint FROM follow WHERE nomUsuariSeguint = NEW.nomUsuari;
-DECLARE CONTINUE HANDLER FOR NOT FOUND SET var_final = 1;
-SET @V1 = "***** Hola he publicado una historia miralo aqui :";
-SET @V1 += NEW.idHistoria;
-SET @V1 += " *****";
-  OPEN cursor1;
-    bucle: LOOP
-
-        FETCH cursor1 INTO nomUsuariSeguido, nomUsuariSeguin;
-        IF var_final = 1 THEN
-        LEAVE bucle;
-        END IF;
-
-        INSERT INTO missatge (missatge, nomUsuariEmi, nomUsuariRec) 
-        VALUES
-        (@V1, nomUsuariSeguin, nomUsuariSeguido);
-
-    END LOOP bucle;
-  CLOSE cursor1;
-END//;
+    DELETE FROM resposta WHERE resposta.nomUsuari = username;
+    DELETE FROM historia WHERE historia.nomUsuari = username;
+    DELETE FROM publicacio WHERE publicacio.nomUsuari = username;
+	  DELETE FROM missatge WHERE missatge.nomUsuariEmi = username OR missatge.nomUsuariRec = username;
+    DELETE FROM follow WHERE follow.nomUsuariSeguidor = username OR follow.nomUsuariSeguint = username;
+    DELETE FROM usuari WHERE usuari.nomUsuari = username;
+END;

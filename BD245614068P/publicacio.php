@@ -175,6 +175,7 @@ function insertarPub()
                                 action="../BD243216941X/insertComent.php?id=<?= $fila['idPublicacio'] ?>">
                                 <input type="text" name="missatge" placeholder="Comentario"
                                     class="pl-4 focus mt-1 block w-full border-none bg-gray-100 h-8 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
+                                    <input type="hidden" name="origin" value="1">
                                 <!-- mirar de esconder el boton submit -->
                                 <input type="submit" value="">
                             </form>
@@ -269,6 +270,7 @@ function insertarPub()
                                     action="../BD243216941X/insertComent.php?id=<?= $fila_share['idPublicacio'] ?>">
                                     <input type="text" name="missatge" placeholder="Comentario"
                                         class="pl-4 focus mt-1 block w-full border-none bg-gray-100 h-8 rounded-xl shadow-lg hover:bg-blue-100 focus:bg-gray-100">
+                                        <input type="hidden" name="origin" value="1">
                                     <!-- mirar de esconder el boton submit -->
                                     <input type="submit" value="">
                                 </form>
