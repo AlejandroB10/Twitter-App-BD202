@@ -29,8 +29,8 @@ DELIMITER //
 CREATE PROCEDURE deleteUser(IN username varchar(25))
 BEGIN
     DELETE FROM resposta WHERE resposta.nomUsuari = username;
-    DELETE FROM historia WHERE historia.nomUsuari = username;
     DELETE FROM publicacio WHERE publicacio.nomUsuari = username;
+    DELETE FROM historia WHERE historia.nomUsuari = username;
 	  DELETE FROM missatge WHERE missatge.nomUsuariEmi = username OR missatge.nomUsuariRec = username;
     DELETE FROM follow WHERE follow.nomUsuariSeguidor = username OR follow.nomUsuariSeguint = username;
     DELETE FROM usuari WHERE usuari.nomUsuari = username;

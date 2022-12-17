@@ -120,8 +120,11 @@ $user = $_SESSION["user"];
                         class="p-6 bg-white shadow-lg flex justify-start rounded-lg my-8 sm:flex sm:space-x-8 sm:p-8 w-full">
 
                         <?php
-                            if (!empty($fila['img_profile'])) { ?>
-                        <img class="w-20 h-20 flex items-center rounded-full" src=<?= $fila['img_profile'] ?>
+                        $user_query_img_profile = "SELECT img_profile FROM usuari JOIN historia ON historia.idHistoria = '$idHistoria' AND historia.nomUsuari = usuari.nomUsuari";
+                        $result_img = consultar("localhost", "root", "", $user_query_img_profile);
+                        $reg_img = mysqli_fetch_array($result_img);
+                            if (!empty($reg_img['img_profile'])) { ?>
+                        <img class="w-20 h-20 flex items-center rounded-full" src=<?= $reg_img['img_profile'] ?>
                         alt="user avatar" height="220" width="220" loading="lazy">
                         <?php
                             } else {
