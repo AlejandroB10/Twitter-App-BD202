@@ -37,7 +37,10 @@ $user_data = [
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Perfil</title>
+    <link rel="stylesheet" type="text/css" href="../alertifyjs/css/alertify.css">
+    <link rel="stylesheet" type="text/css" href="../alertifyjs/css/themes/default.css">
     <script src="../tailwind.js"></script>
+    <script src="../alertifyjs/alertify.js"></script>
     <script src="https://cdn.lordicon.com/qjzruarw.js"></script>
 </head>
 
@@ -424,7 +427,7 @@ $user_data = [
                     <div class=" flex items-center justify-center">
                         <button
                             class="group h-12 w-64 px-6 border-2 border-gray-300 rounded-full transition duration-300 hover:border-blue-400 focus:bg-blue-50 active:bg-blue-100">
-                            <a href="">
+                            <a  onclick="delete_user('<?= $user ?>')">
                                 <span
                                     class="block flex items-center justify-center font-semibold tracking-wide text-gray-700 text-sm transition duration-300 group-hover:text-blue-600 sm:text-base">
                                     <lord-icon src="https://cdn.lordicon.com/kfzfxczd.json" trigger="hover"
@@ -524,4 +527,20 @@ $user_data = [
             location.href = 'showPubli.php';
         });
     }
+    
+    function delete_user(user) {
+        alertify.confirm("¿Quieres eliminar tu usuario?",
+            "Tinderinfo eliminará el usuario " + user + " de la aplicación",
+            function () {
+                $.post('userDelete.php', {
+                    user: user
+                }, function () {
+                    location.href="login.php";
+                })
+            },
+            function () {
+            }
+        );
+    }
+
 </script>
